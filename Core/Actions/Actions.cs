@@ -158,6 +158,24 @@ public static class Actions
         return newState;
     }
 
+    public static ICollection<State> GetPossibleStates(State currentState)
+    {
+        List<State> possibleStates = new();
+
+        List<Direction> directions =
+            new() { Direction.Up, Direction.Right, Direction.Down, Direction.Left };
+
+        foreach (Direction direction in directions)
+        {
+            if (CanMove(currentState, direction))
+            {
+                possibleStates.Add(Move(currentState, direction));
+            }
+        }
+
+        return possibleStates;
+    }
+
     private static void Swap(Cell cellA, Cell cellB)
     {
         (cellB.Type, cellA.Type) = (cellA.Type, cellB.Type);

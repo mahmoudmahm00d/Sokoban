@@ -58,6 +58,7 @@ public static class Actions
         }
 
         var newState = state.Clone();
+        newState.PreviousState = state;
 
         var currentCell = GetCell(newState, newState.Farmer);
         var nextPosition = NextPosition(newState.Farmer, direction);

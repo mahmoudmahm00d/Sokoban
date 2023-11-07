@@ -20,25 +20,25 @@ public static class LevelSelector
         string[] textContent = File.ReadAllLines($"./Levels/Level{level}.txt");
 
         grid.Cells = new Cell[textContent.GetLength(0), textContent[0].Length];
-        for (int i = 0; i < textContent.GetLength(0); i++)
+        for (int y = 0; y < textContent.GetLength(0); y++)
         {
-            for (int j = 0; j < textContent[0].Length; j++)
+            for (int x = 0; x < textContent[0].Length; x++)
             {
-                var text = textContent[i];
-                if (text[j] == '@')
+                var text = textContent[y];
+                if (text[x] == '@')
                 {
-                    farmerPosition = new(j, i);
+                    farmerPosition = new(x, y);
                 }
-                if (text[j] == '$')
+                if (text[x] == '$')
                 {
                     seedsCount++;
                 }
-                if (text[j] == '.')
+                if (text[x] == '.')
                 {
                     storagesCount++;
                 }
 
-                grid.Cells[i, j] = new Cell(text[j].ToCellType());
+                grid.Cells[y, x] = new Cell(x, y, text[x].ToCellType());
             }
         }
 

@@ -4,6 +4,7 @@ namespace Sokofarm.Core.Models;
 
 public class State : IPrototype<State>
 {
+	public State PreviousState { get; set; }
 	public Grid Grid { get; set; }
 	public Position Farmer { get; set; }
 	public int CurrentLevel { get; set; }
@@ -16,6 +17,7 @@ public class State : IPrototype<State>
 	{
 		return new State
 		{
+			PreviousState = PreviousState?.Clone(),
 			Grid = Grid.Clone(),
 			Farmer = Farmer.Clone(),
 			CurrentLevel = CurrentLevel,

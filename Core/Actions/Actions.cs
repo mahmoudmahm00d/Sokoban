@@ -56,11 +56,13 @@ public static class Actions
             return state;
         }
 
-        var nextPosition = NextPosition(state.Farmer, direction);
-        var currentCell = GetCell(state, state.Farmer);
-        var nextCell = GetCell(state, nextPosition);
-        var beyondPosition = NextBeyondPosition(state.Farmer, direction);
-        var beyondCell = GetCell(state, beyondPosition);
+        var newState = state.Clone();
+
+        var currentCell = GetCell(newState, newState.Farmer);
+        var nextPosition = NextPosition(newState.Farmer, direction);
+        var nextCell = GetCell(newState, nextPosition);
+        var beyondPosition = NextBeyondPosition(newState.Farmer, direction);
+        var beyondCell = GetCell(newState, beyondPosition);
 
         if (nextCell.Type == CellType.Empty)
         {
@@ -141,20 +143,9 @@ public static class Actions
             return state;
         }
 
-        Cell[,] newArray = new Cell[state.Grid.Cells.GetLength(0), state.Grid.Cells.GetLength(1)];
-        Array.Copy(
-            state.Grid.Cells,
-            newArray,
-            state.Grid.Cells.GetLength(0) * state.Grid.Cells.GetLength(1)
-        );
-
-        return new State
-        {
-            CurrentLevel = state.CurrentLevel,
-            Grid = new Grid { Cells = newArray },
-            Farmer = nextPosition,
-            IsCurrentLevelSolved = newArray.Solved()
-        };
+        newState.Farmer = nextPosition;
+        newState.IsCurrentLevelSolved = newState.Solved();
+        return newState;
     }
 
     private static void Swap(Cell cellA, Cell cellB)

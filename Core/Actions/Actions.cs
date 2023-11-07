@@ -1,4 +1,5 @@
 using Sokofarm.Core.Enums;
+using Sokofarm.Core.Interfaces;
 using Sokofarm.Core.Logic;
 using Sokofarm.Core.Models;
 
@@ -104,7 +105,15 @@ public static class Actions
             if (beyondCell.Type == CellType.Empty)
             {
                 Swap(nextCell, beyondCell);
-                Swap(currentCell, nextCell);
+                if (currentCell.Type == CellType.FarmerOnStorage)
+                {
+                    currentCell.Type = CellType.Storage;
+                    nextCell.Type = CellType.Farmer;
+                }
+                else
+                {
+                    Swap(currentCell, nextCell);
+                }
             }
             else if (beyondCell.Type == CellType.Storage)
             {

@@ -120,7 +120,15 @@ public static class Actions
             {
                 beyondCell.Type = CellType.SeedOnStorage;
                 nextCell.Type = CellType.Empty;
-                Swap(currentCell, nextCell);
+                if (currentCell.Type == CellType.FarmerOnStorage)
+                {
+                    currentCell.Type = CellType.Storage;
+                    nextCell.Type = CellType.Farmer;
+                }
+                else
+                {
+                    Swap(currentCell, nextCell);
+                }
             }
             else
             {
@@ -158,12 +166,16 @@ public static class Actions
         return newState;
     }
 
+    public static List<Direction> GetDirections()
+    {
+        return new() { Direction.Up, Direction.Right, Direction.Down, Direction.Left };
+    }
+
     public static ICollection<State> GetPossibleStates(State currentState)
     {
         List<State> possibleStates = new();
 
-        List<Direction> directions =
-            new() { Direction.Up, Direction.Right, Direction.Down, Direction.Left };
+        List<Direction> directions = GetDirections();
 
         foreach (Direction direction in directions)
         {
@@ -181,7 +193,7 @@ public static class Actions
         (cellB.Type, cellA.Type) = (cellA.Type, cellB.Type);
     }
 
-    private static Position NextPosition(Position position, Direction direction)
+    public static Position NextPosition(Position position, Direction direction)
     {
         int dx = position.X;
         int dy = position.Y;
@@ -238,7 +250,7 @@ public static class Actions
         isGameOver = true;
     }
 
-    private static bool WithinTheGrid(State state, Position position)
+    public static bool WithinTheGrid(State state, Position position)
     {
         var width = state.Grid.Cells.GetLength(1);
         var height = state.Grid.Cells.GetLength(0);
@@ -256,7 +268,7 @@ public static class Actions
         return true;
     }
 
-    private static Cell GetCell(State state, Position position)
+    public static Cell GetCell(State state, Position position)
     {
         return WithinTheGrid(state, position) ? state.Grid.Cells[position.Y, position.X] : null;
     }

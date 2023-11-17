@@ -105,6 +105,22 @@ public class GameModel
                 catch (FileNotFoundException) { }
                 return;
             }
+            else if (action.Value == Enums.PlayerActions.PlayDFS)
+            {
+                _currentState = DFS.Start(_currentState, _controller.Renderer);
+            }
+            else if (action.Value == Enums.PlayerActions.PlayBFS)
+            {
+                _currentState = BFS.Start(_currentState, _controller.Renderer);
+            }
+            else if (action.Value == Enums.PlayerActions.PlayUniformCostSearch)
+            {
+                _currentState = UCS.Start(_currentState, _controller.Renderer);
+            }
+            else if (action.Value == Enums.PlayerActions.DisplayPath)
+            {
+                _controller.Renderer.DisplayAllPath(_currentState);
+            }
             else if (action.Value == Enums.PlayerActions.Quit)
             {
                 Actions.Actions.QuitGame();

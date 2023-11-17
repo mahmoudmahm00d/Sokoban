@@ -1,7 +1,4 @@
-using Sokofarm.Core.Logic;
-using Sokofarm.Presentation;
-
-namespace Sokofarm.Core.Interfaces;
+namespace SokoFarm.Core.Interfaces;
 
 public interface IController
 {

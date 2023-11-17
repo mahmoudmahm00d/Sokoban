@@ -1,4 +1,4 @@
-﻿namespace Sokofarm.Core.Interfaces;
+﻿namespace SokoFarm.Core.Interfaces;
 
 public interface IPrototype<T>
 {

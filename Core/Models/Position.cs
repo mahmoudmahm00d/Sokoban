@@ -1,6 +1,6 @@
-using Sokofarm.Core.Interfaces;
+using SokoFarm.Core.Interfaces;
 
-namespace Sokofarm.Core.Models;
+namespace SokoFarm.Core.Models;
 
 public class Position : IPrototype<Position>
 {

@@ -1,7 +1,7 @@
-using Sokofarm.Core.Enums;
-using Sokofarm.Core.Interfaces;
+using SokoFarm.Core.Enums;
+using SokoFarm.Core.Interfaces;
 
-namespace Sokofarm.Core.Logic;
+namespace SokoFarm.Core.Logic;
 
 public class ConsolePlayerInput : IPlayerInput
 {
@@ -24,6 +24,10 @@ public class ConsolePlayerInput : IPlayerInput
             ConsoleKey.R => PlayerActions.ResetLevel,
             ConsoleKey.B => PlayerActions.PreviousLevel,
             ConsoleKey.N => PlayerActions.NextLevel,
+            ConsoleKey.P => PlayerActions.DisplayPath,
+            ConsoleKey.D1 => PlayerActions.PlayDFS,
+            ConsoleKey.D2 => PlayerActions.PlayBFS,
+            ConsoleKey.D3 => PlayerActions.PlayUniformCostSearch,
             _ => null,
         };
     }

@@ -1,9 +1,9 @@
-using Sokofarm.Core.Enums;
-using Sokofarm.Core.Interfaces;
-using Sokofarm.Core.Logic;
-using Sokofarm.Core.Models;
+using SokoFarm.Core.Algorithms;
+using SokoFarm.Core.Enums;
+using SokoFarm.Core.Logic;
+using SokoFarm.Core.Models;
 
-namespace Sokofarm.Core.Actions;
+namespace SokoFarm.Core.Actions;
 
 public static class Actions
 {

@@ -1,9 +1,9 @@
 using System.Text;
-using Sokofarm.Core.Interfaces;
-using Sokofarm.Core.Models;
+using SokoFarm.Core.Interfaces;
+using SokoFarm.Core.Models;
 using Spectre.Console;
 
-namespace Sokofarm.Presentation;
+namespace SokoFarm.Presentation;
 
 public class ConsoleRenderer : IRenderer
 {
@@ -88,7 +88,7 @@ public class ConsoleRenderer : IRenderer
 			AnsiConsole.MarkupLine($"[bold white on red]Level Is Unsolvable[/]");
 		}
 
-        for (int i = 0; i < state.Grid.Cells.GetLength(0); i++)
+		for (int i = 0; i < state.Grid.Cells.GetLength(0); i++)
         {
             for (int j = 0; j < state.Grid.Cells.GetLength(1); j++)
             {

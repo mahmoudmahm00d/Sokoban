@@ -1,6 +1,6 @@
-# Sokofarm
+# SokoFarm
 
-Sokofarm is a console-based game where the player moves around a grid, trying to get all the seeds into the storages.
+SokoFarm is a console-based game where the player moves around a grid, trying to get all the seeds into the storages.
 
 ## Getting Started
 

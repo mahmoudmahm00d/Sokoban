@@ -1,6 +1,6 @@
-using Sokofarm.Core.Models;
+using SokoFarm.Core.Models;
 
-namespace Sokofarm.Core.Logic;
+namespace SokoFarm.Core.Logic;
 
 public static class LevelSelector
 {
@@ -46,7 +46,8 @@ public static class LevelSelector
         {
             Grid = grid,
             Farmer = farmerPosition,
-            CurrentLevel = level
+            CurrentLevel = level,
+            Cost = 0
         };
     }
 

@@ -1,4 +1,4 @@
-namespace Sokofarm.Core.Enums;
+namespace SokoFarm.Core.Enums;
 
 public enum Direction
 {

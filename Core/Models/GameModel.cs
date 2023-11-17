@@ -1,8 +1,9 @@
-using Sokofarm.Core.Logic;
-using Sokofarm.Core.Handlers;
-using Sokofarm.Core.Interfaces;
+using SokoFarm.Core.Logic;
+using SokoFarm.Core.Handlers;
+using SokoFarm.Core.Interfaces;
+using SokoFarm.Core.Algorithms;
 
-namespace Sokofarm.Core.Models;
+namespace SokoFarm.Core.Models;
 
 public class GameModel
 {

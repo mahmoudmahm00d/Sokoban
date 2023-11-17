@@ -163,6 +163,7 @@ public static class Actions
 
         newState.Farmer = nextPosition;
         newState.IsCurrentLevelSolved = newState.Solved();
+        newState.IsCurrentLevelSolvable = !newState.Trapped();
         return newState;
     }
 

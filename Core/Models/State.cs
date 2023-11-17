@@ -13,6 +13,7 @@ public class State : IPrototype<State>
 	public int SeedsCount { get; set; }
 	public int StoragesCount { get; set; }
 	public int SeedsOnStorageCount { get; set; }
+    public int Cost { get; set; } = 1;
 
 	public State Clone()
 	{

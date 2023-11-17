@@ -29,4 +29,16 @@ public class State : IPrototype<State>
 			SeedsOnStorageCount = SeedsOnStorageCount
 		};
 	}
+
+    public override bool Equals(object obj)
+    {
+        State otherState = obj as State;
+
+        return otherState is not null && Grid.Equals(otherState.Grid);
+    }
+
+    public override int GetHashCode()
+    {
+        return 17 + Grid.GetHashCode() + Farmer.GetHashCode();
+    }
 }

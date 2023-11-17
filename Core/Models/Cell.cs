@@ -22,6 +22,18 @@ public class Cell : IPrototype<Cell>
 		Type = type;
 	}
 
+    public override bool Equals(object obj)
+    {
+        Cell otherCell = obj as Cell;
+
+        return otherCell is not null && Type.Equals(otherCell.Type);
+    }
+
+    public override int GetHashCode()
+    {
+        return Type.GetHashCode() * 17 + X.GetHashCode() * 17 + Y.GetHashCode() * 17;
+    }
+
 	public Cell Clone()
 	{
 		return new Cell

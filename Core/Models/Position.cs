@@ -19,4 +19,15 @@ public class Position : IPrototype<Position>
     {
         return new Position { X = X, Y = Y };
     }
+
+	public override bool Equals(object obj)
+	{
+        var other = obj as Position;
+		return other is not null && X == other.X && Y == other.Y;
+	}
+
+    public override int GetHashCode()
+    {
+        return X.GetHashCode() * 17 + Y.GetHashCode() * 17;
+    }
 }

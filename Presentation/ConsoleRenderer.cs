@@ -82,6 +82,12 @@ public class ConsoleRenderer : IRenderer
         {
             AnsiConsole.MarkupLine($"[bold white on green4]Level Cleared[/]");
         }
+
+		if (!state.IsCurrentLevelSolvable)
+		{
+			AnsiConsole.MarkupLine($"[bold white on red]Level Is Unsolvable[/]");
+		}
+
         for (int i = 0; i < state.Grid.Cells.GetLength(0); i++)
         {
             for (int j = 0; j < state.Grid.Cells.GetLength(1); j++)
@@ -94,11 +100,31 @@ public class ConsoleRenderer : IRenderer
 
         AnsiConsole.MarkupLine("Move with arrow keys [bold blue](Up, Right, Down, Left)[/]");
         AnsiConsole.MarkupLine("Next Level: [bold blue]n[/], Previous Level: [bold blue]b[/]");
+        AnsiConsole.MarkupLine("DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/]");
         AnsiConsole.MarkupLine("Reset with [bold blue]r[/], Quit: [bold blue]c[/]");
     }
 
     public void ClearPreviousState()
     {
         Console.Clear();
+    }
+
+    public void DisplayAllPath(State state)
+    {
+        if (state is null)
+        {
+            throw new ArgumentNullException(nameof(state));
+        }
+
+        var currentState = state;
+        int movesCount = 0;
+        do
+        {
+            Display(currentState);
+            currentState = currentState.PreviousState;
+            Console.WriteLine(new String('=', 50));
+            movesCount++;
+        } while (currentState != null);
+        Console.WriteLine($"Moves Count: {movesCount}");
     }
 }

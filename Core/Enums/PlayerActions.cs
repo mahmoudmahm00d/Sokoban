@@ -1,4 +1,4 @@
-namespace Sokofarm.Core.Enums
+namespace SokoFarm.Core.Enums
 {
     public enum PlayerActions
     {
@@ -9,6 +9,10 @@ namespace Sokofarm.Core.Enums
         MoveRight,
         NextLevel,
         PreviousLevel,
-        ResetLevel
+        ResetLevel,
+        DisplayPath,
+        PlayDFS,
+        PlayBFS,
+        PlayUniformCostSearch
     }
 }

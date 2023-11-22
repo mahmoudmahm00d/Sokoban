@@ -189,6 +189,36 @@ public static class Actions
         return possibleStates;
     }
 
+    public static IList<Position> GetStoragesPositions(State currentState)
+    {
+        List<Position> storagesPositions = new();
+
+        foreach (var cell in currentState.Grid.Cells)
+        {
+            if (cell.Type == CellType.Storage || cell.Type == CellType.FarmerOnStorage)
+            {
+                storagesPositions.Add(new Position { X = cell.X, Y = cell.Y });
+            }
+        }
+
+        return storagesPositions;
+    }
+
+    public static IList<Position> GetSeedsPositions(State currentState)
+    {
+        List<Position> storagesPositions = new();
+
+        foreach (var cell in currentState.Grid.Cells)
+        {
+            if (cell.Type == CellType.Seed)
+            {
+                storagesPositions.Add(new Position { X = cell.X, Y = cell.Y });
+            }
+        }
+
+        return storagesPositions;
+    }
+
     private static void Swap(Cell cellA, Cell cellB)
     {
         (cellB.Type, cellA.Type) = (cellA.Type, cellB.Type);

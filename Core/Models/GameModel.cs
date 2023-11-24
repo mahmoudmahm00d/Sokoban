@@ -2,6 +2,7 @@ using SokoFarm.Core.Logic;
 using SokoFarm.Core.Handlers;
 using SokoFarm.Core.Interfaces;
 using SokoFarm.Core.Algorithms;
+using System.Diagnostics;
 
 namespace SokoFarm.Core.Models;
 
@@ -108,15 +109,53 @@ public class GameModel
             }
             else if (action.Value == Enums.PlayerActions.PlayDFS)
             {
+                Stopwatch stopwatch = new();
+                stopwatch.Start();
                 _currentState = DFS.Start(_currentState, _controller.Renderer);
+                stopwatch.Stop();
+                _controller.Renderer.DisplayMessage(
+                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
+                );
             }
             else if (action.Value == Enums.PlayerActions.PlayBFS)
             {
+                Stopwatch stopwatch = new();
+                stopwatch.Start();
                 _currentState = BFS.Start(_currentState, _controller.Renderer);
+                stopwatch.Stop();
+                _controller.Renderer.DisplayMessage(
+                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
+                );
             }
             else if (action.Value == Enums.PlayerActions.PlayUniformCostSearch)
             {
+                Stopwatch stopwatch = new();
+                stopwatch.Start();
                 _currentState = UCS.Start(_currentState, _controller.Renderer);
+                stopwatch.Stop();
+                _controller.Renderer.DisplayMessage(
+                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
+                );
+            }
+            else if (action.Value == Enums.PlayerActions.PlayAStar)
+            {
+                Stopwatch stopwatch = new();
+                stopwatch.Start();
+                _currentState = AStar.Start(_currentState, _controller.Renderer);
+                stopwatch.Stop();
+                _controller.Renderer.DisplayMessage(
+                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
+                );
+            }
+            else if (action.Value == Enums.PlayerActions.HillClimbing)
+            {
+                Stopwatch stopwatch = new();
+                stopwatch.Start();
+                _currentState = HillClimbing.Start(_currentState, _controller.Renderer);
+                stopwatch.Stop();
+                _controller.Renderer.DisplayMessage(
+                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
+                );
             }
             else if (action.Value == Enums.PlayerActions.DisplayPath)
             {

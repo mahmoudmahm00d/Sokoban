@@ -28,6 +28,8 @@ public class ConsolePlayerInput : IPlayerInput
             ConsoleKey.D1 => PlayerActions.PlayDFS,
             ConsoleKey.D2 => PlayerActions.PlayBFS,
             ConsoleKey.D3 => PlayerActions.PlayUniformCostSearch,
+            ConsoleKey.D4 => PlayerActions.PlayAStar,
+            ConsoleKey.D5 => PlayerActions.HillClimbing,
             _ => null,
         };
     }

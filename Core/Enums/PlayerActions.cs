@@ -13,6 +13,8 @@ namespace SokoFarm.Core.Enums
         DisplayPath,
         PlayDFS,
         PlayBFS,
-        PlayUniformCostSearch
+        PlayUniformCostSearch,
+        PlayAStar,
+        HillClimbing
     }
 }

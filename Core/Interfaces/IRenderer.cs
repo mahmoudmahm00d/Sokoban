@@ -6,5 +6,6 @@ public interface IRenderer
 {
     void ClearPreviousState();
     void Display(State grid);
+    void DisplayMessage(string message);
     void DisplayAllPath(State grid);
 }

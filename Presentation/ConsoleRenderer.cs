@@ -100,7 +100,7 @@ public class ConsoleRenderer : IRenderer
 
         AnsiConsole.MarkupLine("Move with arrow keys [bold blue](Up, Right, Down, Left)[/]");
         AnsiConsole.MarkupLine("Next Level: [bold blue]n[/], Previous Level: [bold blue]b[/]");
-        AnsiConsole.MarkupLine("DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/]");
+        AnsiConsole.MarkupLine("DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/], HillClimbing: [bold blue]5[/]");
         AnsiConsole.MarkupLine("Reset with [bold blue]r[/], Quit: [bold blue]c[/]");
     }
 
@@ -122,9 +122,14 @@ public class ConsoleRenderer : IRenderer
         {
             Display(currentState);
             currentState = currentState.PreviousState;
-            Console.WriteLine(new String('=', 50));
+            AnsiConsole.MarkupLine($"[blue]{new String('=', 50)}[/]");
             movesCount++;
         } while (currentState != null);
-        Console.WriteLine($"Moves Count: {movesCount}");
+        AnsiConsole.MarkupLine($"Moves Count: [blue]{movesCount}[/]");
+    }
+
+    public void DisplayMessage(string message)
+    {
+        AnsiConsole.MarkupLine($"[blue]{message}[/]");
     }
 }

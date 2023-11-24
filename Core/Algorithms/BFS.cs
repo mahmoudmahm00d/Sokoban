@@ -8,9 +8,9 @@ namespace SokoFarm.Core.Algorithms;
 /// <summary>
 /// Breadth-First Search class
 /// </summary>
-public class BFS
+public class BFS : SokobanSearchAlgorithm
 {
-    public static State Start(State state, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null)
     {
         var visited = new HashSet<State>();
         var queue = new Queue<State>();
@@ -34,12 +34,7 @@ public class BFS
             // If this state is solved, reconstruct and return the path
             if (currentState.Solved())
             {
-                return currentState;
-            }
-
-            if (currentState.Trapped())
-            {
-                continue;
+                return new Tuple<State, HashSet<State>>(currentState, visited);
             }
 
             // Otherwise, add all possible next states to the queue

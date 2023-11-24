@@ -6,13 +6,13 @@ using static SokoFarm.Core.Actions.Actions;
 
 namespace SokoFarm.Core.Algorithms;
 
-public class AStar
+public class AStar : SokobanSearchAlgorithm
 {
-    public static State Start(State start, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State start, IRenderer renderer = null)
     {
         PriorityQueue<State, int> queue = new();
-        queue.Enqueue(start, 0);
-        Dictionary<State, int> visited = new();
+        queue.Enqueue(start, start.Cost + Heuristic.Custom(start));
+        HashSet<State> visited = new();
 
         while (queue.Count > 0)
         {
@@ -23,19 +23,24 @@ public class AStar
 
             if (currentState.Solved())
             {
-                return currentState;
+                return new Tuple<State, HashSet<State>>(currentState, visited);
             }
 
-            visited[currentState] = currentState.Cost + Heuristic.Custom(currentState);
+            visited.Add(currentState);
 
             foreach (State neighbor in GetPossibleStates(currentState))
             {
-                if (visited.ContainsKey(neighbor))
+                if (visited.Contains(neighbor))
                 {
                     continue;
                 }
 
-                int newCost = currentState.Cost + Heuristic.Custom(currentState);
+                var newCost = Heuristic.Custom(currentState);
+                if (newCost != int.MaxValue)
+                {
+                    newCost += currentState.Cost;
+                }
+                
                 neighbor.Cost = newCost;
                 queue.Enqueue(neighbor, newCost);
             }

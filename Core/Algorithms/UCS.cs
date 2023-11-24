@@ -8,13 +8,13 @@ namespace SokoFarm.Core.Algorithms;
 /// <summary>
 /// Uniform Cost Search class
 /// </summary>
-class UCS
+class UCS : SokobanSearchAlgorithm
 {
-    public static State Start(State start, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State start, IRenderer renderer = null)
     {
         PriorityQueue<State, int> queue = new();
         queue.Enqueue(start, 0);
-        Dictionary<State, int> visited = new();
+        HashSet<State> visited = new();
 
         while (queue.Count > 0)
         {
@@ -25,14 +25,14 @@ class UCS
 
             if (currentState.Solved())
             {
-                return currentState;
+                return new Tuple<State, HashSet<State>>(currentState, visited);
             }
 
-            visited[currentState] = currentState.Cost;
+            visited.Add(currentState);
 
             foreach (State neighbor in GetPossibleStates(currentState))
             {
-                if (visited.ContainsKey(neighbor))
+                if (visited.Contains(neighbor))
                 {
                     continue;
                 }

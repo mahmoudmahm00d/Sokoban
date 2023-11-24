@@ -8,9 +8,9 @@ namespace SokoFarm.Core.Algorithms;
 /// <summary>
 /// Depth-First Search class
 /// </summary>
-public class DFS
+public class DFS : SokobanSearchAlgorithm
 {
-    public static State Start(State state, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null)
     {
 		var visited = new HashSet<State>();
 
@@ -36,7 +36,7 @@ public class DFS
 			// If this state is solved, return it
 			if (currentState.Solved())
 			{
-				return currentState;
+				return new Tuple<State, HashSet<State>>(currentState, visited);
 			}
 
 			if (currentState.Trapped())

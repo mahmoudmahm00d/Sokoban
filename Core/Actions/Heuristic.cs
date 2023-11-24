@@ -1,4 +1,5 @@
 using SokoFarm.Core.Algorithms;
+using SokoFarm.Core.Logic;
 using SokoFarm.Core.Models;
 using static SokoFarm.Core.Actions.Actions;
 
@@ -28,7 +29,12 @@ public class Heuristic
 
     public static int Custom(State currentState)
     {
-        if (!currentState.IsCurrentLevelSolvable)
+        if (currentState.Trapped())
+        {
+            return int.MaxValue;
+        }
+
+        if (currentState.HasDeadlock())
         {
             return int.MaxValue;
         }

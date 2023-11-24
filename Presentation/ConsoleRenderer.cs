@@ -83,12 +83,12 @@ public class ConsoleRenderer : IRenderer
             AnsiConsole.MarkupLine($"[bold white on green4]Level Cleared[/]");
         }
 
-		if (!state.IsCurrentLevelSolvable)
-		{
-			AnsiConsole.MarkupLine($"[bold white on red]Level Is Unsolvable[/]");
-		}
+        if (!state.IsCurrentLevelSolvable)
+        {
+            AnsiConsole.MarkupLine($"[bold white on red]Level Is Unsolvable[/]");
+        }
 
-		for (int i = 0; i < state.Grid.Cells.GetLength(0); i++)
+        for (int i = 0; i < state.Grid.Cells.GetLength(0); i++)
         {
             for (int j = 0; j < state.Grid.Cells.GetLength(1); j++)
             {
@@ -100,7 +100,9 @@ public class ConsoleRenderer : IRenderer
 
         AnsiConsole.MarkupLine("Move with arrow keys [bold blue](Up, Right, Down, Left)[/]");
         AnsiConsole.MarkupLine("Next Level: [bold blue]n[/], Previous Level: [bold blue]b[/]");
-        AnsiConsole.MarkupLine("DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/], HillClimbing: [bold blue]5[/]");
+        AnsiConsole.MarkupLine(
+            "DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/]"
+        );
         AnsiConsole.MarkupLine("Reset with [bold blue]r[/], Quit: [bold blue]c[/]");
     }
 

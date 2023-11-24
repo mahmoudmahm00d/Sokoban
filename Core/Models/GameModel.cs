@@ -11,6 +11,7 @@ public class GameModel
     private State _currentState;
 
     private readonly IController _controller;
+    private SokobanSearchAlgorithm _algorithm;
 
     public GameModel()
     {
@@ -109,54 +110,35 @@ public class GameModel
             }
             else if (action.Value == Enums.PlayerActions.PlayDFS)
             {
-                Stopwatch stopwatch = new();
-                stopwatch.Start();
-                _currentState = DFS.Start(_currentState, _controller.Renderer);
-                stopwatch.Stop();
-                _controller.Renderer.DisplayMessage(
-                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
-                );
+                _algorithm = new DFS();
+                AlgorithmExecutionStatistics();
             }
             else if (action.Value == Enums.PlayerActions.PlayBFS)
             {
-                Stopwatch stopwatch = new();
-                stopwatch.Start();
-                _currentState = BFS.Start(_currentState, _controller.Renderer);
-                stopwatch.Stop();
-                _controller.Renderer.DisplayMessage(
-                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
-                );
+                _algorithm = new BFS();
+                AlgorithmExecutionStatistics();
             }
             else if (action.Value == Enums.PlayerActions.PlayUniformCostSearch)
             {
-                Stopwatch stopwatch = new();
-                stopwatch.Start();
-                _currentState = UCS.Start(_currentState, _controller.Renderer);
-                stopwatch.Stop();
-                _controller.Renderer.DisplayMessage(
-                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
-                );
+                _algorithm = new UCS();
+                AlgorithmExecutionStatistics();
             }
             else if (action.Value == Enums.PlayerActions.PlayAStar)
             {
-                Stopwatch stopwatch = new();
-                stopwatch.Start();
-                _currentState = AStar.Start(_currentState, _controller.Renderer);
-                stopwatch.Stop();
-                _controller.Renderer.DisplayMessage(
-                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
-                );
+                _algorithm = new AStar();
+                AlgorithmExecutionStatistics();
             }
-            else if (action.Value == Enums.PlayerActions.HillClimbing)
-            {
-                Stopwatch stopwatch = new();
-                stopwatch.Start();
-                _currentState = HillClimbing.Start(_currentState, _controller.Renderer);
-                stopwatch.Stop();
-                _controller.Renderer.DisplayMessage(
-                    $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
-                );
-            }
+            // else if (action.Value == Enums.PlayerActions.HillClimbing)
+            // {
+            //     _currentState.IsHumanPlayer = false;
+            //     Stopwatch stopwatch = new();
+            //     stopwatch.Start();
+            //     _currentState = HillClimbing.Start(_currentState, _controller.Renderer);
+            //     stopwatch.Stop();
+            //     _controller.Renderer.DisplayMessage(
+            //         $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
+            //     );
+            // }
             else if (action.Value == Enums.PlayerActions.DisplayPath)
             {
                 _controller.Renderer.DisplayAllPath(_currentState);
@@ -172,9 +154,29 @@ public class GameModel
         var canMove = Actions.Actions.CanMove(_currentState, direction.Value);
         if (canMove)
         {
+            _currentState.IsHumanPlayer = true;
             _currentState = Actions.Actions.Move(_currentState, direction.Value);
             _controller.Renderer.ClearPreviousState();
             Render();
+        }
+    }
+
+    private void AlgorithmExecutionStatistics()
+    {
+        _currentState.IsHumanPlayer = false;
+        Stopwatch stopwatch = new();
+        stopwatch.Start();
+        Tuple<State, HashSet<State>> result = _algorithm.Start(_currentState, _controller.Renderer);
+        _currentState = result?.Item1 ?? _currentState;
+        stopwatch.Stop();
+        if (result is not null)
+        {
+            _controller.Renderer.DisplayMessage($"Elapsed time: {stopwatch.ElapsedMilliseconds}ms");
+            _controller.Renderer.DisplayMessage($"Visited Set items count: {result.Item2.Count}");
+        }
+        else
+        {
+            _controller.Renderer.DisplayMessage("Could not solve this board");
         }
     }
 }

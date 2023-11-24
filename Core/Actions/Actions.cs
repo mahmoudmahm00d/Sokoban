@@ -163,7 +163,8 @@ public static class Actions
 
         newState.Farmer = nextPosition;
         newState.IsCurrentLevelSolved = newState.Solved();
-        newState.IsCurrentLevelSolvable = !newState.Trapped();
+        newState.IsCurrentLevelSolvable =
+            !newState.IsHumanPlayer || (!newState.Trapped() && !newState.HasDeadlock());
         return newState;
     }
 

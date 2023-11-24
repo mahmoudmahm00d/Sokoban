@@ -8,6 +8,7 @@ public class State : IPrototype<State>
     public Grid Grid { get; set; }
     public Position Farmer { get; set; }
     public int CurrentLevel { get; set; }
+    public bool IsHumanPlayer { get; set; } = true;
     public bool IsCurrentLevelSolved { get; set; }
     public bool IsCurrentLevelSolvable { get; set; } = true;
     public int SeedsCount { get; set; }
@@ -23,6 +24,7 @@ public class State : IPrototype<State>
             Grid = Grid.Clone(),
             Farmer = Farmer.Clone(),
             CurrentLevel = CurrentLevel,
+            IsHumanPlayer = IsHumanPlayer,
             IsCurrentLevelSolved = IsCurrentLevelSolved,
             IsCurrentLevelSolvable = IsCurrentLevelSolvable,
             SeedsCount = SeedsCount,

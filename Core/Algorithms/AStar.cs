@@ -11,22 +11,20 @@ public class AStar : SokobanSearchAlgorithm
     public override Tuple<State, HashSet<State>> Start(State start, IRenderer renderer = null)
     {
         PriorityQueue<State, int> queue = new();
-        queue.Enqueue(start, start.Cost + Heuristic.Custom(start));
         HashSet<State> visited = new();
-
+        if (start.Solved())
+        {
+            return new Tuple<State, HashSet<State>>(start, visited);
+        }
+        
+        queue.Enqueue(start, start.Cost + Heuristic.Custom(start));
         while (queue.Count > 0)
         {
             State currentState = queue.Dequeue();
+            visited.Add(currentState);
 
             renderer?.ClearPreviousState();
             renderer?.Display(currentState);
-
-            if (currentState.Solved())
-            {
-                return new Tuple<State, HashSet<State>>(currentState, visited);
-            }
-
-            visited.Add(currentState);
 
             foreach (State neighbor in GetPossibleStates(currentState))
             {
@@ -35,12 +33,19 @@ public class AStar : SokobanSearchAlgorithm
                     continue;
                 }
 
+                if (neighbor.Solved())
+                {
+                    renderer?.ClearPreviousState();
+                    renderer?.Display(neighbor);
+                    return new Tuple<State, HashSet<State>>(neighbor, visited);
+                }
+
                 var newCost = Heuristic.Custom(currentState);
                 if (newCost != int.MaxValue)
                 {
                     newCost += currentState.Cost;
                 }
-                
+
                 neighbor.Cost = newCost;
                 queue.Enqueue(neighbor, newCost);
             }

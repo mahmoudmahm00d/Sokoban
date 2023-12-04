@@ -6,32 +6,41 @@ using static SokoFarm.Core.Actions.Actions;
 
 namespace SokoFarm.Core.Algorithms;
 
-public class HillClimbing
+public class HillClimbing : SokobanSearchAlgorithm
 {
-    public static State Start(State state, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null)
     {
         var current = state;
-        int currentHeuristic = int.MaxValue;
+        int currentHeuristic = Heuristic.Custom(current);
 
-        while (!current.Solved())
+        while (true)
         {
             var neighbors = GetPossibleStates(current);
+            var smallestLocal = neighbors.FirstOrDefault();
+            int smallestHeuristic = Heuristic.Custom(smallestLocal);
 
             foreach (var item in neighbors)
             {
                 int itemHeuristic = Heuristic.Custom(item);
 
-                if (itemHeuristic <= currentHeuristic)
+                if (itemHeuristic <= smallestHeuristic)
                 {
-                    current = item;
-                    currentHeuristic = itemHeuristic;
+                    smallestHeuristic = itemHeuristic;
+                    smallestLocal = item;
                 }
             }
 
+            if (currentHeuristic <= smallestHeuristic)
+            {
+                renderer?.ClearPreviousState();
+                renderer?.Display(current);
+                return new Tuple<State, HashSet<State>>(current, null);
+            }
+
+            current = smallestLocal;
+            currentHeuristic = smallestHeuristic;
             renderer?.ClearPreviousState();
             renderer?.Display(current);
         }
-
-        return current;
     }
 }

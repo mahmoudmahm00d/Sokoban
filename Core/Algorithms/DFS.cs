@@ -12,46 +12,49 @@ public class DFS : SokobanSearchAlgorithm
 {
     public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null)
     {
-		var visited = new HashSet<State>();
+        var visited = new HashSet<State>();
 
-		var stack = new Stack<State>();
+        var stack = new Stack<State>();
 
-		stack.Push(state);
+        // If this state is solved, reconstruct and return the path
+        if (state.Solved())
+        {
+            return new Tuple<State, HashSet<State>>(state, visited);
+        }
 
-		while (stack.Count > 0)
-		{
-			var currentState = stack.Pop();
+        stack.Push(state);
 
-			// If we've already visited this state, skip it
-			if (visited.Contains(currentState))
-			{
-				continue;
-			}
+        while (stack.Count > 0)
+        {
+            var currentState = stack.Pop();
 
-			visited.Add(currentState);
+            visited.Add(currentState);
 
-			renderer?.ClearPreviousState();
-			renderer?.Display(currentState);
+            renderer?.ClearPreviousState();
+            renderer?.Display(currentState);
 
-			// If this state is solved, return it
-			if (currentState.Solved())
-			{
-				return new Tuple<State, HashSet<State>>(currentState, visited);
-			}
+            // Otherwise, add all possible next states to the stack
+            foreach (var nextState in GetPossibleStates(currentState))
+            {
+                // If we've already visited this state, skip it
+                if (visited.Contains(nextState))
+                {
+                    continue;
+                }
 
-			if (currentState.Trapped())
-			{
-				continue;
-			}
+                // If this state is solved, return it
+                if (nextState.Solved())
+                {
+                    renderer?.ClearPreviousState();
+                    renderer?.Display(nextState);
+                    return new Tuple<State, HashSet<State>>(nextState, visited);
+                }
 
-			// Otherwise, add all possible next states to the stack
-			foreach (var nextState in GetPossibleStates(currentState))
-			{
-				stack.Push(nextState);
-			}
-		}
+                stack.Push(nextState);
+            }
+        }
 
-		// If we've exhausted all possible states without finding a solution, return null
-		return null;
-	}
+        // If we've exhausted all possible states without finding a solution, return null
+        return null;
+    }
 }

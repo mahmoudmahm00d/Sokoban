@@ -15,31 +15,38 @@ public class BFS : SokobanSearchAlgorithm
         var visited = new HashSet<State>();
         var queue = new Queue<State>();
 
+        // If this state is solved, reconstruct and return the path
+        if (state.Solved())
+        {
+            return new Tuple<State, HashSet<State>>(state, visited);
+        }
+
         queue.Enqueue(state);
 
         while (queue.Count > 0)
         {
             var currentState = queue.Dequeue();
-            // If we've already visited this state, skip it
-            if (visited.Contains(currentState))
-            {
-                continue;
-            }
-
             visited.Add(currentState);
 
             renderer?.ClearPreviousState();
             renderer?.Display(currentState);
 
-            // If this state is solved, reconstruct and return the path
-            if (currentState.Solved())
-            {
-                return new Tuple<State, HashSet<State>>(currentState, visited);
-            }
-
             // Otherwise, add all possible next states to the queue
             foreach (var nextState in GetPossibleStates(currentState))
             {
+                if (visited.Contains(nextState))
+                {
+                    continue;
+                }
+
+                // If this state is solved, reconstruct and return the path
+                if (nextState.Solved())
+                {
+                    renderer?.ClearPreviousState();
+                    renderer?.Display(nextState);
+                    return new Tuple<State, HashSet<State>>(currentState, visited);
+                }
+
                 queue.Enqueue(nextState);
             }
         }

@@ -32,7 +32,7 @@ public static class Actions
         if (
             nextCell.Type == CellType.SeedOnStorage
             && nextBeyondCell is not null
-            && nextBeyondCell.Type == CellType.Storage
+            && (nextBeyondCell.Type == CellType.Storage || nextBeyondCell.Type == CellType.Empty)
         )
         {
             return true;
@@ -138,10 +138,18 @@ public static class Actions
         else if (
             nextCell.Type == CellType.SeedOnStorage
             && beyondCell is not null
-            && beyondCell.Type == CellType.Storage
+            && (beyondCell.Type == CellType.Storage || beyondCell.Type == CellType.Empty)
         )
         {
-            Swap(beyondCell, nextCell);
+            if (beyondCell.Type == CellType.Empty)
+            {
+                beyondCell.Type = CellType.Seed;
+            }
+            else
+            {
+                Swap(beyondCell, nextCell);
+            }
+            
             nextCell.Type = CellType.FarmerOnStorage;
             if (currentCell.Type == CellType.FarmerOnStorage)
             {

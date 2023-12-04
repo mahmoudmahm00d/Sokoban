@@ -128,17 +128,11 @@ public class GameModel
                 _algorithm = new AStar();
                 AlgorithmExecutionStatistics();
             }
-            // else if (action.Value == Enums.PlayerActions.HillClimbing)
-            // {
-            //     _currentState.IsHumanPlayer = false;
-            //     Stopwatch stopwatch = new();
-            //     stopwatch.Start();
-            //     _currentState = HillClimbing.Start(_currentState, _controller.Renderer);
-            //     stopwatch.Stop();
-            //     _controller.Renderer.DisplayMessage(
-            //         $"Elapsed time: {stopwatch.ElapsedMilliseconds}ms"
-            //     );
-            // }
+            else if (action.Value == Enums.PlayerActions.HillClimbing)
+            {
+                _algorithm = new HillClimbing();
+                AlgorithmExecutionStatistics();
+            }
             else if (action.Value == Enums.PlayerActions.DisplayPath)
             {
                 _controller.Renderer.DisplayAllPath(_currentState);
@@ -169,14 +163,10 @@ public class GameModel
         Tuple<State, HashSet<State>> result = _algorithm.Start(_currentState, _controller.Renderer);
         _currentState = result?.Item1 ?? _currentState;
         stopwatch.Stop();
-        if (result is not null)
-        {
-            _controller.Renderer.DisplayMessage($"Elapsed time: {stopwatch.ElapsedMilliseconds}ms");
-            _controller.Renderer.DisplayMessage($"Visited Set items count: {result.Item2.Count}");
-        }
-        else
-        {
-            _controller.Renderer.DisplayMessage("Could not solve this board");
-        }
+        _controller.Renderer.DisplayAlgorithmExecutionStatistics(
+            result.Item1,
+            result.Item2,
+            stopwatch.ElapsedMilliseconds
+        );
     }
 }

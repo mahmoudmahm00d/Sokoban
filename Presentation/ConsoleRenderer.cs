@@ -1,4 +1,5 @@
 using System.Text;
+using SokoFarm.Core.Handlers;
 using SokoFarm.Core.Interfaces;
 using SokoFarm.Core.Models;
 using Spectre.Console;
@@ -101,7 +102,7 @@ public class ConsoleRenderer : IRenderer
         AnsiConsole.MarkupLine("Move with arrow keys [bold blue](Up, Right, Down, Left)[/]");
         AnsiConsole.MarkupLine("Next Level: [bold blue]n[/], Previous Level: [bold blue]b[/]");
         AnsiConsole.MarkupLine(
-            "DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/]"
+            "DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/], Hill Climbing: [bold blue]5[/]"
         );
         AnsiConsole.MarkupLine("Reset with [bold blue]r[/], Quit: [bold blue]c[/]");
     }
@@ -133,5 +134,22 @@ public class ConsoleRenderer : IRenderer
     public void DisplayMessage(string message)
     {
         AnsiConsole.MarkupLine($"[blue]{message}[/]");
+    }
+
+    public void DisplayAlgorithmExecutionStatistics(
+        State state,
+        HashSet<State> visited,
+        long elapsedTime
+    )
+    {
+        if (state is not null)
+        {
+            DisplayMessage($"Elapsed time: {elapsedTime}ms");
+            DisplayMessage($"Moves count: {state.MovesCount()}");
+            DisplayMessage($"Visited Set items count: {visited?.Count ?? 0}");
+            return;
+        }
+
+        DisplayMessage("Could not solve this board");
     }
 }

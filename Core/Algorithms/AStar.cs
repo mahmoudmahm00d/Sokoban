@@ -8,7 +8,7 @@ namespace SokoFarm.Core.Algorithms;
 
 public class AStar : SokobanSearchAlgorithm
 {
-    public override Tuple<State, HashSet<State>> Start(State start, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State start, IRenderer renderer = null, CancellationTokenSource token = null)
     {
         PriorityQueue<State, int> queue = new();
         HashSet<State> visited = new();
@@ -16,7 +16,7 @@ public class AStar : SokobanSearchAlgorithm
         {
             return new Tuple<State, HashSet<State>>(start, visited);
         }
-        
+
         queue.Enqueue(start, start.Cost + Heuristic.Custom(start));
         while (queue.Count > 0)
         {
@@ -26,6 +26,11 @@ public class AStar : SokobanSearchAlgorithm
             renderer?.ClearPreviousState();
             renderer?.Display(currentState);
 
+            if (token?.IsCancellationRequested ?? false)
+            {
+                return new Tuple<State, HashSet<State>>(currentState, visited);
+            }
+            
             foreach (State neighbor in GetPossibleStates(currentState))
             {
                 if (visited.Contains(neighbor))

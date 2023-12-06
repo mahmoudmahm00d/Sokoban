@@ -8,7 +8,7 @@ namespace SokoFarm.Core.Algorithms;
 
 public class HillClimbing : SokobanSearchAlgorithm
 {
-    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null, CancellationTokenSource token = null)
     {
         var current = state;
         int currentHeuristic = Heuristic.Custom(current);
@@ -41,6 +41,11 @@ public class HillClimbing : SokobanSearchAlgorithm
             currentHeuristic = smallestHeuristic;
             renderer?.ClearPreviousState();
             renderer?.Display(current);
+
+            if (token?.IsCancellationRequested ?? false)
+            {
+                return new Tuple<State, HashSet<State>>(current, new());
+            }
         }
     }
 }

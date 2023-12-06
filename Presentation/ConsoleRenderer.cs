@@ -104,7 +104,7 @@ public class ConsoleRenderer : IRenderer
         AnsiConsole.MarkupLine(
             "DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/], Hill Climbing: [bold blue]5[/]"
         );
-        AnsiConsole.MarkupLine("Reset with [bold blue]r[/], Quit: [bold blue]c[/]");
+        AnsiConsole.MarkupLine("Reset with [bold blue]r[/], Cancel: [bold blue]c[/], Quit: [bold blue]q[/]");
     }
 
     public void ClearPreviousState()

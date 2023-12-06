@@ -10,7 +10,7 @@ namespace SokoFarm.Core.Algorithms;
 /// </summary>
 public class BFS : SokobanSearchAlgorithm
 {
-    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null, CancellationTokenSource token = null)
     {
         var visited = new HashSet<State>();
         var queue = new Queue<State>();
@@ -30,6 +30,11 @@ public class BFS : SokobanSearchAlgorithm
 
             renderer?.ClearPreviousState();
             renderer?.Display(currentState);
+            
+            if (token?.IsCancellationRequested ?? false)
+            {
+                return new Tuple<State, HashSet<State>>(currentState, visited);
+            }
 
             // Otherwise, add all possible next states to the queue
             foreach (var nextState in GetPossibleStates(currentState))

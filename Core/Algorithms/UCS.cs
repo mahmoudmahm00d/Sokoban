@@ -10,7 +10,7 @@ namespace SokoFarm.Core.Algorithms;
 /// </summary>
 class UCS : SokobanSearchAlgorithm
 {
-    public override Tuple<State, HashSet<State>> Start(State start, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State start, IRenderer renderer = null, CancellationTokenSource token = null)
     {
         PriorityQueue<State, int> queue = new();
         queue.Enqueue(start, 0);
@@ -23,6 +23,11 @@ class UCS : SokobanSearchAlgorithm
 
             renderer?.ClearPreviousState();
             renderer?.Display(currentState);
+
+            if (token?.IsCancellationRequested ?? false)
+            {
+                return new Tuple<State, HashSet<State>>(currentState, visited);
+            }
 
             foreach (State neighbor in GetPossibleStates(currentState))
             {

@@ -10,7 +10,7 @@ namespace SokoFarm.Core.Algorithms;
 /// </summary>
 public class DFS : SokobanSearchAlgorithm
 {
-    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null)
+    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null, CancellationTokenSource token = null)
     {
         var visited = new HashSet<State>();
 
@@ -32,6 +32,11 @@ public class DFS : SokobanSearchAlgorithm
 
             renderer?.ClearPreviousState();
             renderer?.Display(currentState);
+
+            if (token?.IsCancellationRequested ?? false)
+            {
+                return new Tuple<State, HashSet<State>>(currentState, visited);
+            }
 
             // Otherwise, add all possible next states to the stack
             foreach (var nextState in GetPossibleStates(currentState))

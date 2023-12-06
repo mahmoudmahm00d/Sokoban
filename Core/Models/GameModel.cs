@@ -12,6 +12,7 @@ public class GameModel
 
     private readonly IController _controller;
     private SokobanSearchAlgorithm _algorithm;
+    private CancellationTokenSource _token;
 
     public GameModel()
     {
@@ -23,6 +24,7 @@ public class GameModel
             throw new ArgumentException();
         }
 
+        _token = new();
         _controller = new ConsoleController();
     }
 
@@ -40,6 +42,17 @@ public class GameModel
     {
         var action = _controller.PlayerInput.ReadPlayerInput();
         if (action is null)
+        {
+            return;
+        }
+
+        if (action.Value == Enums.PlayerActions.Cancel)
+        {
+            _token.Cancel();
+            _token = new();
+        }
+
+        if (_algorithm is not null)
         {
             return;
         }
@@ -157,16 +170,24 @@ public class GameModel
 
     private void AlgorithmExecutionStatistics()
     {
-        _currentState.IsHumanPlayer = false;
-        Stopwatch stopwatch = new();
-        stopwatch.Start();
-        Tuple<State, HashSet<State>> result = _algorithm.Start(_currentState, _controller.Renderer);
-        _currentState = result?.Item1 ?? _currentState;
-        stopwatch.Stop();
-        _controller.Renderer.DisplayAlgorithmExecutionStatistics(
-            result.Item1,
-            result.Item2,
-            stopwatch.ElapsedMilliseconds
-        );
+        
+        var task = new Task(() =>
+        {
+            _currentState.IsHumanPlayer = false;
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+            Tuple<State, HashSet<State>> result = _algorithm.Start(_currentState, _controller.Renderer, _token);
+            _currentState = result?.Item1 ?? _currentState;
+            stopwatch.Stop();
+            _controller.Renderer.DisplayAlgorithmExecutionStatistics(
+                result.Item1,
+                result.Item2,
+                stopwatch.ElapsedMilliseconds
+            );
+
+            _algorithm = null;
+        });
+
+        task.Start();
     }
 }

@@ -5,8 +5,8 @@ namespace SokoFarm.Core.Models;
 public class Grid : IPrototype<Grid>
 {
     private Cell[,] cells;
-    public int InitialStoragesCount { get; set; }
-    public int InitialSeedsCount { get; set; }
+    private int InitialStoragesCount { get; set; }
+    private int InitialSeedsCount { get; set; }
 
     public Cell[,] Cells
     {
@@ -20,9 +20,7 @@ public class Grid : IPrototype<Grid>
 
     public override bool Equals(object obj)
     {
-        Grid otherGrid = obj as Grid;
-
-        if (otherGrid is null)
+        if (obj is not Grid otherGrid)
         {
             return false;
         }
@@ -51,7 +49,7 @@ public class Grid : IPrototype<Grid>
 
     public override int GetHashCode()
     {
-        int hash = 17;
+        var hash = 17;
         foreach (var cell in Cells)
         {
             hash += cell.GetHashCode();
@@ -63,9 +61,9 @@ public class Grid : IPrototype<Grid>
     public Grid Clone()
     {
         var clonedCells = new Cell[Cells.GetLength(0), Cells.GetLength(1)];
-        for (int i = 0; i < Cells.GetLength(0); i++)
+        for (var i = 0; i < Cells.GetLength(0); i++)
         {
-            for (int j = 0; j < Cells.GetLength(1); j++)
+            for (var j = 0; j < Cells.GetLength(1); j++)
             {
                 clonedCells[i, j] = Cells[i, j].Clone();
             }
@@ -75,7 +73,7 @@ public class Grid : IPrototype<Grid>
         {
             InitialSeedsCount = InitialSeedsCount,
             InitialStoragesCount = InitialStoragesCount,
-            Cells = clonedCells
+            Cells = clonedCells,
         };
     }
 }

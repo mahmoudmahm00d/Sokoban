@@ -4,11 +4,11 @@ namespace SokoFarm.Core.Models;
 
 public class Cell : IPrototype<Cell>
 {
-    public int X { get; set; }
-    public int Y { get; set; }
+    public int X { get; private init; }
+    public int Y { get; private init; }
     public CellType Type { get; set; }
 
-    public Cell() { }
+    private Cell() { }
 
     public Cell(CellType type)
     {
@@ -24,7 +24,7 @@ public class Cell : IPrototype<Cell>
 
     public override bool Equals(object obj)
     {
-        Cell otherCell = obj as Cell;
+        var otherCell = obj as Cell;
 
         return otherCell is not null && Type.Equals(otherCell.Type);
     }
@@ -40,7 +40,7 @@ public class Cell : IPrototype<Cell>
         {
             X = X,
             Y = Y,
-            Type = Type
+            Type = Type,
         };
     }
 }

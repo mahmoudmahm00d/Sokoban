@@ -4,14 +4,14 @@ namespace SokoFarm.Core.Logic;
 
 public static class SolvedChecker
 {
-    public static bool Solved(this State State)
+    public static bool Solved(this State state)
     {
-        if (State is null || State.Grid is null || State.Grid.Cells is null)
+        if (state?.Grid?.Cells is null)
         {
             return false;
         }
 
-        foreach (var cell in State.Grid.Cells)
+        foreach (var cell in state.Grid.Cells)
         {
             if (cell.Type == CellType.Seed)
             {

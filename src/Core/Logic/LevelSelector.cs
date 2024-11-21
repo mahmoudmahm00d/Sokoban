@@ -6,28 +6,28 @@ public static class LevelSelector
 {
     public static State SelectLevel(Grid grid, int level = 1)
     {
-        bool fileExists = File.Exists($"./Levels/Level{level}.txt");
+        var fileExists = File.Exists($"./Levels/Level{level}.txt");
 
         if (!fileExists)
         {
             throw new FileNotFoundException();
         }
 
-        int seedsCount = 0;
-        int storagesCount = 0;
+        var seedsCount = 0;
+        var storagesCount = 0;
 
         Position farmerPosition = null;
-        string[] textContent = File.ReadAllLines($"./Levels/Level{level}.txt");
+        var textContent = File.ReadAllLines($"./Levels/Level{level}.txt");
 
         grid.Cells = new Cell[textContent.GetLength(0), textContent[0].Length];
-        for (int y = 0; y < textContent.GetLength(0); y++)
+        for (var y = 0; y < textContent.GetLength(0); y++)
         {
-            for (int x = 0; x < textContent[0].Length; x++)
+            for (var x = 0; x < textContent[0].Length; x++)
             {
                 var text = textContent[y];
                 if (text[x] == '@')
                 {
-                    farmerPosition = new(x, y);
+                    farmerPosition = new Position(x, y);
                 }
                 if (text[x] == '$')
                 {
@@ -45,9 +45,11 @@ public static class LevelSelector
         return new State
         {
             Grid = grid,
+            SeedsCount = seedsCount,
+            StoragesCount = storagesCount,
             Farmer = farmerPosition,
             CurrentLevel = level,
-            Cost = 0
+            Cost = 0,
         };
     }
 

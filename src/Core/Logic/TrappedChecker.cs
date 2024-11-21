@@ -1,20 +1,20 @@
 using SokoFarm.Core.Models;
 using static SokoFarm.Core.Actions.Actions;
 
-namespace SokoFarm.Core.Algorithms;
+namespace SokoFarm.Core.Logic;
 
 public static class TrappedChecker
 {
     public static bool Trapped(this State state)
     {
-        if (state is null || state.Grid is null || state.Grid.Cells is null)
+        if (state?.Grid?.Cells is null)
         {
             return false;
         }
 
-        for (int y = 0; y < state.Grid.Cells.GetLength(0); y++)
+        for (var y = 0; y < state.Grid.Cells.GetLength(0); y++)
         {
-            for (int x = 0; x < state.Grid.Cells.GetLength(1); x++)
+            for (var x = 0; x < state.Grid.Cells.GetLength(1); x++)
             {
                 var cell = state.Grid.Cells[y, x];
                 if (cell.Type != CellType.Seed)
@@ -22,7 +22,7 @@ public static class TrappedChecker
                     continue;
                 }
 
-                List<Cell> neighbors = new();
+                List<Cell> neighbors = [];
                 foreach (var direction in GetDirections())
                 {
                     var position = NextPosition(new Position { X = cell.X, Y = cell.Y }, direction);

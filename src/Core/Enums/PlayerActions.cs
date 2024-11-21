@@ -12,10 +12,11 @@ namespace SokoFarm.Core.Enums
         PreviousLevel,
         ResetLevel,
         DisplayPath,
+        UnDo,
         PlayDFS,
         PlayBFS,
         PlayUniformCostSearch,
         PlayAStar,
-        HillClimbing
+        HillClimbing,
     }
 }

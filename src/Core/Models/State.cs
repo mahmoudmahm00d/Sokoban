@@ -5,15 +5,15 @@ namespace SokoFarm.Core.Models;
 public class State : IPrototype<State>
 {
     public State PreviousState { get; set; }
-    public Grid Grid { get; set; }
+    public Grid Grid { get; init; }
     public Position Farmer { get; set; }
-    public int CurrentLevel { get; set; }
+    public int CurrentLevel { get; init; }
     public bool IsHumanPlayer { get; set; } = true;
     public bool IsCurrentLevelSolved { get; set; }
     public bool IsCurrentLevelSolvable { get; set; } = true;
-    public int SeedsCount { get; set; }
-    public int StoragesCount { get; set; }
-    public int SeedsOnStorageCount { get; set; }
+    public int SeedsCount { get; init; }
+    public int StoragesCount { get; init; }
+    private int SeedsOnStorageCount { get; init; }
     public int Cost { get; set; } = 1;
 
     public State Clone()
@@ -29,13 +29,13 @@ public class State : IPrototype<State>
             IsCurrentLevelSolvable = IsCurrentLevelSolvable,
             SeedsCount = SeedsCount,
             StoragesCount = StoragesCount,
-            SeedsOnStorageCount = SeedsOnStorageCount
+            SeedsOnStorageCount = SeedsOnStorageCount,
         };
     }
 
     public override bool Equals(object obj)
     {
-        State otherState = obj as State;
+        var otherState = obj as State;
 
         return otherState is not null && Grid.Equals(otherState.Grid);
     }

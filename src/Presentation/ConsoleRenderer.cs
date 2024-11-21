@@ -27,19 +27,20 @@ public class ConsoleRenderer : IRenderer
     {
         StringBuilder builder = new();
 
-        for (int i = 0; i < grid.Cells.GetLength(0); i++)
+        for (var i = 0; i < grid.Cells.GetLength(0); i++)
         {
-            for (int j = 0; j < grid.Cells.GetLength(1); j++)
+            for (var j = 0; j < grid.Cells.GetLength(1); j++)
             {
                 builder.Append(grid.Cells[i, j]);
             }
+
             builder.AppendLine();
         }
 
         return builder.ToString();
     }
 
-    public void Display(Cell cell)
+    private static void Display(Cell cell)
     {
         switch (cell.Type)
         {
@@ -72,10 +73,7 @@ public class ConsoleRenderer : IRenderer
 
     public void Display(State state)
     {
-        if (state is null)
-        {
-            throw new ArgumentNullException(nameof(state));
-        }
+        ArgumentNullException.ThrowIfNull(state);
 
         AnsiConsole.MarkupLine("[bold]Welcome to SokoFarm[/]");
         AnsiConsole.MarkupLine($"[bold]Level: {state.CurrentLevel}[/]");
@@ -86,12 +84,12 @@ public class ConsoleRenderer : IRenderer
 
         if (!state.IsCurrentLevelSolvable)
         {
-            AnsiConsole.MarkupLine($"[bold white on red]Level Is Unsolvable[/]");
+            AnsiConsole.MarkupLine($"[bold white on darkred]Level Is Unsolvable[/]");
         }
 
-        for (int i = 0; i < state.Grid.Cells.GetLength(0); i++)
+        for (var i = 0; i < state.Grid.Cells.GetLength(0); i++)
         {
-            for (int j = 0; j < state.Grid.Cells.GetLength(1); j++)
+            for (var j = 0; j < state.Grid.Cells.GetLength(1); j++)
             {
                 Display(state.Grid.Cells[i, j]);
             }
@@ -104,7 +102,9 @@ public class ConsoleRenderer : IRenderer
         AnsiConsole.MarkupLine(
             "DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/], Hill Climbing: [bold blue]5[/]"
         );
-        AnsiConsole.MarkupLine("Print path [bold blue]p[/], Reset with [bold blue]r[/], Cancel: [bold blue]c[/], Quit: [bold blue]q[/]");
+        AnsiConsole.MarkupLine(
+            "Print path [bold blue]p[/], Reset with [bold blue]r[/], Cancel: [bold blue]c[/], Quit: [bold blue]q[/]"
+        );
     }
 
     public void ClearPreviousState()
@@ -120,12 +120,12 @@ public class ConsoleRenderer : IRenderer
         }
 
         var currentState = state;
-        int movesCount = 0;
+        var movesCount = 0;
         do
         {
             Display(currentState);
             currentState = currentState.PreviousState;
-            AnsiConsole.MarkupLine($"[blue]{new String('=', 50)}[/]");
+            AnsiConsole.MarkupLine($"[blue]{new string('=', 50)}[/]");
             movesCount++;
         } while (currentState != null);
         AnsiConsole.MarkupLine($"Moves Count: [blue]{movesCount}[/]");

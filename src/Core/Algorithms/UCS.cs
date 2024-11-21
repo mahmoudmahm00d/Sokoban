@@ -10,15 +10,19 @@ namespace SokoFarm.Core.Algorithms;
 /// </summary>
 class UCS : SokobanSearchAlgorithm
 {
-    public override Tuple<State, HashSet<State>> Start(State start, IRenderer renderer = null, CancellationTokenSource token = null)
+    public override Tuple<State, HashSet<State>> Start(
+        State start,
+        IRenderer renderer = null,
+        CancellationTokenSource token = null
+    )
     {
         PriorityQueue<State, int> queue = new();
         queue.Enqueue(start, 0);
-        HashSet<State> visited = new();
+        HashSet<State> visited = [];
 
         while (queue.Count > 0)
         {
-            State currentState = queue.Dequeue();
+            var currentState = queue.Dequeue();
             visited.Add(currentState);
 
             renderer?.ClearPreviousState();
@@ -29,11 +33,11 @@ class UCS : SokobanSearchAlgorithm
                 return new Tuple<State, HashSet<State>>(currentState, visited);
             }
 
-            foreach (State neighbor in GetPossibleStates(currentState))
+            foreach (var neighbor in GetPossibleStates(currentState))
             {
                 var previouslyVisited = visited.FirstOrDefault(item => item.Equals(neighbor));
 
-                if (previouslyVisited is not null && neighbor.Cost <= previouslyVisited.Cost )
+                if (previouslyVisited is not null && neighbor.Cost <= previouslyVisited.Cost)
                 {
                     continue;
                 }

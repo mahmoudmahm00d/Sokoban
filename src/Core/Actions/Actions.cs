@@ -7,9 +7,7 @@ namespace SokoFarm.Core.Actions;
 
 public static class Actions
 {
-    private static bool isGameOver = false;
-
-    public static bool IsGameOver => isGameOver;
+    public static bool IsGameOver { get; private set; } = false;
 
     public static bool CanMove(State state, Direction direction)
     {
@@ -19,35 +17,14 @@ public static class Actions
         var nextBeyondPosition = NextBeyondPosition(state.Farmer, direction);
         var nextBeyondCell = GetCell(state, nextBeyondPosition);
 
-        if (nextCell.Type == CellType.Empty)
+        return nextCell.Type switch
         {
-            return true;
-        }
-
-        if (nextCell.Type == CellType.Storage)
-        {
-            return true;
-        }
-
-        if (
-            nextCell.Type == CellType.SeedOnStorage
-            && nextBeyondCell is not null
-            && (nextBeyondCell.Type == CellType.Storage || nextBeyondCell.Type == CellType.Empty)
-        )
-        {
-            return true;
-        }
-
-        if (
-            nextCell.Type == CellType.Seed
-            && nextBeyondCell is not null
-            && (nextBeyondCell.Type == CellType.Empty || nextBeyondCell.Type == CellType.Storage)
-        )
-        {
-            return true;
-        }
-
-        return false;
+            CellType.Empty or CellType.Storage => true,
+            CellType.SeedOnStorage
+                when nextBeyondCell?.Type is CellType.Storage or CellType.Empty => true,
+            CellType.Seed when nextBeyondCell?.Type is CellType.Empty or CellType.Storage => true,
+            _ => false,
+        };
     }
 
     public static State Move(State state, Direction direction)
@@ -66,79 +43,68 @@ public static class Actions
         var beyondPosition = NextBeyondPosition(newState.Farmer, direction);
         var beyondCell = GetCell(newState, beyondPosition);
 
-        if (nextCell.Type == CellType.Empty)
+        if (nextCell.Type == CellType.Empty && currentCell.Type == CellType.FarmerOnStorage)
         {
-            if (currentCell.Type == CellType.FarmerOnStorage)
-            {
-                nextCell.Type = CellType.Farmer;
-                currentCell.Type = CellType.Storage;
-            }
-            else
-            {
-                Swap(nextCell, currentCell);
-            }
+            nextCell.Type = CellType.Farmer;
+            currentCell.Type = CellType.Storage;
+        }
+        else if (nextCell.Type == CellType.Empty)
+        {
+            Swap(nextCell, currentCell);
+        }
+        else if (nextCell.Type == CellType.Storage && currentCell.Type == CellType.Farmer)
+        {
+            nextCell.Type = CellType.FarmerOnStorage;
+            currentCell.Type = CellType.Empty;
+        }
+        else if (nextCell.Type == CellType.Storage && currentCell.Type == CellType.FarmerOnStorage)
+        {
+            nextCell.Type = CellType.FarmerOnStorage;
+            currentCell.Type = CellType.Storage;
         }
         else if (nextCell.Type == CellType.Storage)
         {
-            if (currentCell.Type == CellType.Farmer)
+            nextCell.Type = CellType.FarmerOnStorage;
+            currentCell.Type = CellType.Empty;
+        }
+        else if (nextCell.Type == CellType.Seed && beyondCell is null)
+        {
+            return state;
+        }
+        else if (nextCell.Type == CellType.Seed && beyondCell.Type == CellType.Empty)
+        {
+            Swap(nextCell, beyondCell);
+            if (currentCell.Type == CellType.FarmerOnStorage)
             {
-                nextCell.Type = CellType.FarmerOnStorage;
-                currentCell.Type = CellType.Empty;
-            }
-            else if (currentCell.Type == CellType.FarmerOnStorage)
-            {
-                nextCell.Type = CellType.FarmerOnStorage;
                 currentCell.Type = CellType.Storage;
+                nextCell.Type = CellType.Farmer;
             }
             else
             {
-                nextCell.Type = CellType.FarmerOnStorage;
-                currentCell.Type = CellType.Empty;
+                Swap(currentCell, nextCell);
+            }
+        }
+        else if (nextCell.Type == CellType.Seed && beyondCell.Type == CellType.Storage)
+        {
+            beyondCell.Type = CellType.SeedOnStorage;
+            nextCell.Type = CellType.Empty;
+            if (currentCell.Type == CellType.FarmerOnStorage)
+            {
+                currentCell.Type = CellType.Storage;
+                nextCell.Type = CellType.Farmer;
+            }
+            else
+            {
+                Swap(currentCell, nextCell);
             }
         }
         else if (nextCell.Type == CellType.Seed)
         {
-            if (beyondCell is null)
-            {
-                return state;
-            }
-
-            if (beyondCell.Type == CellType.Empty)
-            {
-                Swap(nextCell, beyondCell);
-                if (currentCell.Type == CellType.FarmerOnStorage)
-                {
-                    currentCell.Type = CellType.Storage;
-                    nextCell.Type = CellType.Farmer;
-                }
-                else
-                {
-                    Swap(currentCell, nextCell);
-                }
-            }
-            else if (beyondCell.Type == CellType.Storage)
-            {
-                beyondCell.Type = CellType.SeedOnStorage;
-                nextCell.Type = CellType.Empty;
-                if (currentCell.Type == CellType.FarmerOnStorage)
-                {
-                    currentCell.Type = CellType.Storage;
-                    nextCell.Type = CellType.Farmer;
-                }
-                else
-                {
-                    Swap(currentCell, nextCell);
-                }
-            }
-            else
-            {
-                return state;
-            }
+            return state;
         }
         else if (
             nextCell.Type == CellType.SeedOnStorage
-            && beyondCell is not null
-            && (beyondCell.Type == CellType.Storage || beyondCell.Type == CellType.Empty)
+            && beyondCell?.Type is CellType.Storage or CellType.Empty
         )
         {
             if (beyondCell.Type == CellType.Empty)
@@ -149,7 +115,7 @@ public static class Actions
             {
                 Swap(beyondCell, nextCell);
             }
-            
+
             nextCell.Type = CellType.FarmerOnStorage;
             if (currentCell.Type == CellType.FarmerOnStorage)
             {
@@ -183,11 +149,11 @@ public static class Actions
 
     public static ICollection<State> GetPossibleStates(State currentState)
     {
-        List<State> possibleStates = new();
+        List<State> possibleStates = [];
 
-        List<Direction> directions = GetDirections();
+        var directions = GetDirections();
 
-        foreach (Direction direction in directions)
+        foreach (var direction in directions)
         {
             if (CanMove(currentState, direction))
             {
@@ -200,11 +166,11 @@ public static class Actions
 
     public static IList<Position> GetStoragesPositions(State currentState)
     {
-        List<Position> storagesPositions = new();
+        List<Position> storagesPositions = [];
 
         foreach (var cell in currentState.Grid.Cells)
         {
-            if (cell.Type == CellType.Storage || cell.Type == CellType.FarmerOnStorage)
+            if (cell.Type is CellType.Storage or CellType.FarmerOnStorage)
             {
                 storagesPositions.Add(new Position { X = cell.X, Y = cell.Y });
             }
@@ -215,7 +181,7 @@ public static class Actions
 
     public static IList<Position> GetSeedsPositions(State currentState)
     {
-        List<Position> storagesPositions = new();
+        List<Position> storagesPositions = [];
 
         foreach (var cell in currentState.Grid.Cells)
         {
@@ -235,8 +201,8 @@ public static class Actions
 
     public static Position NextPosition(Position position, Direction direction)
     {
-        int dx = position.X;
-        int dy = position.Y;
+        var dx = position.X;
+        var dy = position.Y;
 
         switch (direction)
         {
@@ -261,8 +227,8 @@ public static class Actions
 
     private static Position NextBeyondPosition(Position position, Direction direction)
     {
-        int dx = position.X;
-        int dy = position.Y;
+        var dx = position.X;
+        var dy = position.Y;
 
         switch (direction)
         {
@@ -287,7 +253,7 @@ public static class Actions
 
     public static void QuitGame()
     {
-        isGameOver = true;
+        IsGameOver = true;
     }
 
     public static bool WithinTheGrid(State state, Position position)
@@ -300,12 +266,7 @@ public static class Actions
             return false;
         }
 
-        if (position.Y < 0 || height <= position.Y)
-        {
-            return false;
-        }
-
-        return true;
+        return position.Y >= 0 && height > position.Y;
     }
 
     public static Cell GetCell(State state, Position position)

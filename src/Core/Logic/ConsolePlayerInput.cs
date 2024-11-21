@@ -7,13 +7,7 @@ public class ConsolePlayerInput : IPlayerInput
 {
     public PlayerActions? ReadPlayerInput()
     {
-        // TODO: Check if the key available
-        // if (!Console.KeyAvailable)
-        // {
-        //     throw new NotSupportedException("Console keys is not available");
-        // }
-
-        ConsoleKeyInfo key = Console.ReadKey(intercept: true);
+        var key = Console.ReadKey(intercept: true);
         return key.Key switch
         {
             ConsoleKey.UpArrow => PlayerActions.MoveUp,
@@ -26,6 +20,7 @@ public class ConsolePlayerInput : IPlayerInput
             ConsoleKey.B => PlayerActions.PreviousLevel,
             ConsoleKey.N => PlayerActions.NextLevel,
             ConsoleKey.P => PlayerActions.DisplayPath,
+            ConsoleKey.U => PlayerActions.UnDo,
             ConsoleKey.D1 => PlayerActions.PlayDFS,
             ConsoleKey.D2 => PlayerActions.PlayBFS,
             ConsoleKey.D3 => PlayerActions.PlayUniformCostSearch,

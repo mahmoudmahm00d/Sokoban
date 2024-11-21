@@ -12,7 +12,7 @@ public static class Converters
             PlayerActions.MoveDown => Direction.Down,
             PlayerActions.MoveLeft => Direction.Left,
             PlayerActions.MoveRight => Direction.Right,
-            _ => null
+            _ => null,
         };
     }
 }

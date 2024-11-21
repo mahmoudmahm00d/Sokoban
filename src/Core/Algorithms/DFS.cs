@@ -10,7 +10,11 @@ namespace SokoFarm.Core.Algorithms;
 /// </summary>
 public class DFS : SokobanSearchAlgorithm
 {
-    public override Tuple<State, HashSet<State>> Start(State state, IRenderer renderer = null, CancellationTokenSource token = null)
+    public override Tuple<State, HashSet<State>> Start(
+        State state,
+        IRenderer renderer = null,
+        CancellationTokenSource token = null
+    )
     {
         var visited = new HashSet<State>();
 

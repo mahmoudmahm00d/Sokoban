@@ -1,6 +1,6 @@
 ﻿namespace SokoFarm.Core.Interfaces;
 
-public interface IPrototype<T>
+public interface IPrototype<out T>
 {
-	T Clone();
+    T Clone();
 }

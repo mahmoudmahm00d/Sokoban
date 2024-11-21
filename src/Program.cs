@@ -6,8 +6,9 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 // Begin
 GameModel game = new();
 game.Render();
-while (!game.IsGameOver())
+while (!GameModel.IsGameOver())
 {
     game.Play();
 }
+
 // End

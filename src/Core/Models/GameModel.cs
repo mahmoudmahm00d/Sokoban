@@ -1,8 +1,9 @@
-using SokoFarm.Core.Logic;
+using System.Diagnostics;
+using SokoFarm.Core.Algorithms;
 using SokoFarm.Core.Handlers;
 using SokoFarm.Core.Interfaces;
-using SokoFarm.Core.Algorithms;
-using System.Diagnostics;
+using SokoFarm.Core.Logic;
+using Spectre.Console;
 
 namespace SokoFarm.Core.Models;
 
@@ -16,7 +17,7 @@ public class GameModel
 
     public GameModel()
     {
-        _currentState = new State { Grid = new() };
+        _currentState = new State { Grid = new Grid() };
         _currentState = LevelSelector.SelectLevel(_currentState.Grid, 1);
 
         if (_currentState.SeedsCount != _currentState.StoragesCount)
@@ -24,11 +25,11 @@ public class GameModel
             throw new ArgumentException();
         }
 
-        _token = new();
+        _token = new CancellationTokenSource();
         _controller = new ConsoleController();
     }
 
-    public bool IsGameOver()
+    public static bool IsGameOver()
     {
         return Actions.Actions.IsGameOver;
     }
@@ -49,7 +50,7 @@ public class GameModel
         if (action.Value == Enums.PlayerActions.Cancel)
         {
             _token.Cancel();
-            _token = new();
+            _token = new CancellationTokenSource();
         }
 
         if (_algorithm is not null)
@@ -159,24 +160,26 @@ public class GameModel
         }
 
         var canMove = Actions.Actions.CanMove(_currentState, direction.Value);
-        if (canMove)
-        {
-            _currentState.IsHumanPlayer = true;
-            _currentState = Actions.Actions.Move(_currentState, direction.Value);
-            _controller.Renderer.ClearPreviousState();
-            Render();
-        }
+        if (!canMove)
+            return;
+        _currentState.IsHumanPlayer = true;
+        _currentState = Actions.Actions.Move(_currentState, direction.Value);
+        _controller.Renderer.ClearPreviousState();
+        Render();
     }
 
     private void AlgorithmExecutionStatistics()
     {
-        
         var task = new Task(() =>
         {
             _currentState.IsHumanPlayer = false;
             Stopwatch stopwatch = new();
             stopwatch.Start();
-            Tuple<State, HashSet<State>> result = _algorithm.Start(_currentState, _controller.Renderer, _token);
+            Tuple<State, HashSet<State>> result = _algorithm.Start(
+                _currentState,
+                _controller.Renderer,
+                _token
+            );
             _currentState = result?.Item1 ?? _currentState;
             stopwatch.Stop();
             _controller.Renderer.DisplayAlgorithmExecutionStatistics(

@@ -5,15 +5,7 @@ namespace SokoFarm.Core.Logic;
 
 public class ConsoleController : IController
 {
-    private readonly IRenderer renderer;
-    private readonly IPlayerInput playerInput;
-    public IRenderer Renderer => renderer;
+    public IRenderer Renderer { get; } = new ConsoleRenderer();
 
-    public IPlayerInput PlayerInput => playerInput;
-
-    public ConsoleController()
-    {
-        renderer = new ConsoleRenderer();
-        playerInput = new ConsolePlayerInput();
-    }
+    public IPlayerInput PlayerInput { get; } = new ConsolePlayerInput();
 }

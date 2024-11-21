@@ -8,10 +8,7 @@ public static class DeadlockChecker
 {
     public static bool HasDeadlock(this State state)
     {
-        if (state is null)
-        {
-            throw new ArgumentNullException(nameof(state));
-        }
+        ArgumentNullException.ThrowIfNull(state);
 
         if (state?.Grid?.Cells is null)
         {
@@ -21,11 +18,11 @@ public static class DeadlockChecker
         return SquareDeadlock(state) || TowOnWallDeadlock(state);
     }
 
-    public static bool SquareDeadlock(State state)
+    private static bool SquareDeadlock(State state)
     {
-        for (int y = 0; y < state.Grid.Cells.GetLength(0); y++)
+        for (var y = 0; y < state.Grid.Cells.GetLength(0); y++)
         {
-            for (int x = 0; x < state.Grid.Cells.GetLength(1); x++)
+            for (var x = 0; x < state.Grid.Cells.GetLength(1); x++)
             {
                 var cell = state.Grid.Cells[y, x];
                 if (cell.Type != CellType.Seed)
@@ -76,11 +73,11 @@ public static class DeadlockChecker
         return false;
     }
 
-    public static bool TowOnWallDeadlock(State state)
+    private static bool TowOnWallDeadlock(State state)
     {
-        for (int y = 0; y < state.Grid.Cells.GetLength(0); y++)
+        for (var y = 0; y < state.Grid.Cells.GetLength(0); y++)
         {
-            for (int x = 0; x < state.Grid.Cells.GetLength(1); x++)
+            for (var x = 0; x < state.Grid.Cells.GetLength(1); x++)
             {
                 var cell = state.Grid.Cells[y, x];
                 if (cell.Type != CellType.Seed && cell.Type != CellType.Rock)

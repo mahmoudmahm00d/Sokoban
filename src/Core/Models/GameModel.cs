@@ -61,7 +61,15 @@ public class GameModel
         var direction = action?.ToDirection();
         if (direction is null)
         {
-            if (action.Value == Enums.PlayerActions.ResetLevel)
+            if (action == Enums.PlayerActions.UnDo && _currentState.PreviousState is not null)
+            {
+                _currentState = _currentState.PreviousState;
+                _controller.Renderer.ClearPreviousState();
+                Render();
+                return;
+            }
+
+            if (action == Enums.PlayerActions.ResetLevel)
             {
                 _currentState = LevelSelector.SelectLevel(
                     _currentState.Grid,

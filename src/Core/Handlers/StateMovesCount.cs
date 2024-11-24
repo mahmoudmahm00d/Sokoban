@@ -7,7 +7,7 @@ public static class StateMovesCount
     public static int MovesCount(this State state)
     {
         var count = 0;
-        while (state != null)
+        while (state?.PreviousState != null)
         {
             state = state.PreviousState;
             count++;

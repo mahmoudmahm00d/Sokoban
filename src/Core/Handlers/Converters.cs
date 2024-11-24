@@ -1,6 +1,6 @@
-using SokoFarm.Core.Enums;
+using Sokoban.Core.Enums;
 
-namespace SokoFarm.Core.Handlers;
+namespace Sokoban.Core.Handlers;
 
 public static class Converters
 {

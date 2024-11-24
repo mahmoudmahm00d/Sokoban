@@ -1,4 +1,4 @@
-﻿using SokoFarm.Core.Models;
+﻿using Sokoban.Core.Models;
 
 // Support Emojis
 Console.OutputEncoding = System.Text.Encoding.UTF8;

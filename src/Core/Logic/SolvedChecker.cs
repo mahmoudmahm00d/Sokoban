@@ -1,6 +1,6 @@
-using SokoFarm.Core.Models;
+using Sokoban.Core.Models;
 
-namespace SokoFarm.Core.Logic;
+namespace Sokoban.Core.Logic;
 
 public static class SolvedChecker
 {
@@ -13,7 +13,7 @@ public static class SolvedChecker
 
         foreach (var cell in state.Grid.Cells)
         {
-            if (cell.Type == CellType.Seed)
+            if (cell.Type == CellType.Box)
             {
                 return false;
             }

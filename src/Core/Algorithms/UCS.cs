@@ -1,9 +1,9 @@
-using SokoFarm.Core.Interfaces;
-using SokoFarm.Core.Logic;
-using SokoFarm.Core.Models;
-using static SokoFarm.Core.Actions.Actions;
+using Sokoban.Core.Interfaces;
+using Sokoban.Core.Logic;
+using Sokoban.Core.Models;
+using static Sokoban.Core.Actions.Actions;
 
-namespace SokoFarm.Core.Algorithms;
+namespace Sokoban.Core.Algorithms;
 
 /// <summary>
 /// Uniform Cost Search class

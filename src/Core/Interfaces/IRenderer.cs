@@ -1,7 +1,7 @@
-using SokoFarm.Core.Models;
-using SokoFarm.Presentation;
+using Sokoban.Core.Models;
+using Sokoban.Presentation;
 
-namespace SokoFarm.Core.Interfaces;
+namespace Sokoban.Core.Interfaces;
 
 public interface IRenderer
 {

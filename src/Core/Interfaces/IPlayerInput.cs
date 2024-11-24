@@ -1,6 +1,6 @@
-using SokoFarm.Core.Enums;
+using Sokoban.Core.Enums;
 
-namespace SokoFarm.Core.Interfaces;
+namespace Sokoban.Core.Interfaces;
 
 public interface IPlayerInput
 {

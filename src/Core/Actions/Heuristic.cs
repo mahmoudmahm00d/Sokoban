@@ -1,9 +1,9 @@
-using SokoFarm.Core.Algorithms;
-using SokoFarm.Core.Logic;
-using SokoFarm.Core.Models;
-using static SokoFarm.Core.Actions.Actions;
+using Sokoban.Core.Algorithms;
+using Sokoban.Core.Logic;
+using Sokoban.Core.Models;
+using static Sokoban.Core.Actions.Actions;
 
-namespace SokoFarm.Core.Actions;
+namespace Sokoban.Core.Actions;
 
 public static class Heuristic
 {
@@ -56,8 +56,8 @@ public static class Heuristic
 
         foreach (var goal in seeds)
         {
-            var xDistance = Math.Abs(currentState.Farmer.X - goal.X);
-            var yDistance = Math.Abs(currentState.Farmer.Y - goal.Y);
+            var xDistance = Math.Abs(currentState.Player.X - goal.X);
+            var yDistance = Math.Abs(currentState.Player.Y - goal.Y);
 
             distanceCost += xDistance + yDistance;
         }

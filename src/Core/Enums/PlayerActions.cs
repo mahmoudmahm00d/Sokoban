@@ -1,4 +1,4 @@
-namespace SokoFarm.Core.Enums
+namespace Sokoban.Core.Enums
 {
     public enum PlayerActions
     {

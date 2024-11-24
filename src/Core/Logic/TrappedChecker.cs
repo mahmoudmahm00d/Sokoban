@@ -1,7 +1,7 @@
-using SokoFarm.Core.Models;
-using static SokoFarm.Core.Actions.Actions;
+using Sokoban.Core.Models;
+using static Sokoban.Core.Actions.Actions;
 
-namespace SokoFarm.Core.Logic;
+namespace Sokoban.Core.Logic;
 
 public static class TrappedChecker
 {
@@ -17,7 +17,7 @@ public static class TrappedChecker
             for (var x = 0; x < state.Grid.Cells.GetLength(1); x++)
             {
                 var cell = state.Grid.Cells[y, x];
-                if (cell.Type != CellType.Seed)
+                if (cell.Type != CellType.Box)
                 {
                     continue;
                 }

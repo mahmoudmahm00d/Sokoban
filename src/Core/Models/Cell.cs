@@ -1,6 +1,6 @@
-using SokoFarm.Core.Interfaces;
+using Sokoban.Core.Interfaces;
 
-namespace SokoFarm.Core.Models;
+namespace Sokoban.Core.Models;
 
 public class Cell : IPrototype<Cell>
 {
@@ -49,9 +49,9 @@ public enum CellType
 {
     Empty,
     Rock,
-    Seed,
-    SeedOnStorage,
+    Box,
+    BoxOnStorage,
     Storage,
-    Farmer,
-    FarmerOnStorage,
+    Player,
+    PlayerOnStorage,
 }

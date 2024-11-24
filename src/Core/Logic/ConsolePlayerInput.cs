@@ -1,7 +1,7 @@
-using SokoFarm.Core.Enums;
-using SokoFarm.Core.Interfaces;
+using Sokoban.Core.Enums;
+using Sokoban.Core.Interfaces;
 
-namespace SokoFarm.Core.Logic;
+namespace Sokoban.Core.Logic;
 
 public class ConsolePlayerInput : IPlayerInput
 {

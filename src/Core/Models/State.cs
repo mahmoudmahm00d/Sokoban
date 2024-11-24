@@ -1,12 +1,12 @@
-using SokoFarm.Core.Interfaces;
+using Sokoban.Core.Interfaces;
 
-namespace SokoFarm.Core.Models;
+namespace Sokoban.Core.Models;
 
 public class State : IPrototype<State>
 {
     public State PreviousState { get; set; }
     public Grid Grid { get; init; }
-    public Position Farmer { get; set; }
+    public Position Player { get; set; }
     public int CurrentLevel { get; init; }
     public bool IsHumanPlayer { get; set; } = true;
     public bool IsCurrentLevelSolved { get; set; }
@@ -22,7 +22,7 @@ public class State : IPrototype<State>
         {
             PreviousState = PreviousState?.Clone(),
             Grid = Grid.Clone(),
-            Farmer = Farmer.Clone(),
+            Player = Player.Clone(),
             CurrentLevel = CurrentLevel,
             IsHumanPlayer = IsHumanPlayer,
             IsCurrentLevelSolved = IsCurrentLevelSolved,
@@ -42,6 +42,6 @@ public class State : IPrototype<State>
 
     public override int GetHashCode()
     {
-        return 17 + Grid.GetHashCode() + Farmer.GetHashCode();
+        return 17 + Grid.GetHashCode() + Player.GetHashCode();
     }
 }

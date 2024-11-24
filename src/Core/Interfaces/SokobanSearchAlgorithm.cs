@@ -1,6 +1,6 @@
-using SokoFarm.Core.Models;
+using Sokoban.Core.Models;
 
-namespace SokoFarm.Core.Interfaces;
+namespace Sokoban.Core.Interfaces;
 
 public abstract class SokobanSearchAlgorithm
 {

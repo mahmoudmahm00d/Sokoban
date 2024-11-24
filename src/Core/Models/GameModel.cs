@@ -1,12 +1,12 @@
 using System.Diagnostics;
-using SokoFarm.Core.Algorithms;
-using SokoFarm.Core.Handlers;
-using SokoFarm.Core.Interfaces;
-using SokoFarm.Core.Logic;
-using SokoFarm.Presentation;
-using static SokoFarm.Presentation.Delay;
+using Sokoban.Core.Algorithms;
+using Sokoban.Core.Handlers;
+using Sokoban.Core.Interfaces;
+using Sokoban.Core.Logic;
+using Sokoban.Presentation;
+using static Sokoban.Presentation.Delay;
 
-namespace SokoFarm.Core.Models;
+namespace Sokoban.Core.Models;
 
 public class GameModel
 {

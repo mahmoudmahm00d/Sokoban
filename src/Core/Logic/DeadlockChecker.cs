@@ -1,8 +1,8 @@
-using SokoFarm.Core.Enums;
-using SokoFarm.Core.Models;
-using static SokoFarm.Core.Actions.Actions;
+using Sokoban.Core.Enums;
+using Sokoban.Core.Models;
+using static Sokoban.Core.Actions.Actions;
 
-namespace SokoFarm.Core.Logic;
+namespace Sokoban.Core.Logic;
 
 public static class DeadlockChecker
 {
@@ -25,7 +25,7 @@ public static class DeadlockChecker
             for (var x = 0; x < state.Grid.Cells.GetLength(1); x++)
             {
                 var cell = state.Grid.Cells[y, x];
-                if (cell.Type != CellType.Seed)
+                if (cell.Type != CellType.Box)
                 {
                     continue;
                 }
@@ -80,7 +80,7 @@ public static class DeadlockChecker
             for (var x = 0; x < state.Grid.Cells.GetLength(1); x++)
             {
                 var cell = state.Grid.Cells[y, x];
-                if (cell.Type != CellType.Seed && cell.Type != CellType.Rock)
+                if (cell.Type != CellType.Box && cell.Type != CellType.Rock)
                 {
                     continue;
                 }
@@ -118,7 +118,7 @@ public static class DeadlockChecker
                     cell.Type == downCell.Type
                     && cell.Type == CellType.Rock
                     && rightDownCell.Type == rightCell.Type
-                    && rightDownCell.Type == CellType.Seed
+                    && rightDownCell.Type == CellType.Box
                 )
                 {
                     return true;
@@ -128,7 +128,7 @@ public static class DeadlockChecker
                 // $#
                 if (
                     cell.Type == downCell.Type
-                    && cell.Type == CellType.Seed
+                    && cell.Type == CellType.Box
                     && rightDownCell.Type == rightCell.Type
                     && rightDownCell.Type == CellType.Rock
                 )
@@ -140,7 +140,7 @@ public static class DeadlockChecker
                 // ##
                 if (
                     cell.Type == rightCell.Type
-                    && cell.Type == CellType.Seed
+                    && cell.Type == CellType.Box
                     && rightDownCell.Type == downCell.Type
                     && rightDownCell.Type == CellType.Rock
                 )
@@ -154,7 +154,7 @@ public static class DeadlockChecker
                     cell.Type == rightCell.Type
                     && cell.Type == CellType.Rock
                     && rightDownCell.Type == downCell.Type
-                    && rightDownCell.Type == CellType.Seed
+                    && rightDownCell.Type == CellType.Box
                 )
                 {
                     return true;

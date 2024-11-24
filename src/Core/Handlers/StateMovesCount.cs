@@ -1,6 +1,6 @@
-using SokoFarm.Core.Models;
+using Sokoban.Core.Models;
 
-namespace SokoFarm.Core.Handlers;
+namespace Sokoban.Core.Handlers;
 
 public static class StateMovesCount
 {

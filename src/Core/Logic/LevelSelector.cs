@@ -1,6 +1,6 @@
-using SokoFarm.Core.Models;
+using Sokoban.Core.Models;
 
-namespace SokoFarm.Core.Logic;
+namespace Sokoban.Core.Logic;
 
 public static class LevelSelector
 {
@@ -16,7 +16,7 @@ public static class LevelSelector
         var seedsCount = 0;
         var storagesCount = 0;
 
-        Position farmerPosition = null;
+        Position playerPosition = null;
         var textContent = File.ReadAllLines($"./Levels/Level{level}.txt");
 
         grid.Cells = new Cell[textContent.GetLength(0), textContent[0].Length];
@@ -27,7 +27,7 @@ public static class LevelSelector
                 var text = textContent[y];
                 if (text[x] == '@')
                 {
-                    farmerPosition = new Position(x, y);
+                    playerPosition = new Position(x, y);
                 }
                 if (text[x] == '$')
                 {
@@ -47,7 +47,7 @@ public static class LevelSelector
             Grid = grid,
             SeedsCount = seedsCount,
             StoragesCount = storagesCount,
-            Farmer = farmerPosition,
+            Player = playerPosition,
             CurrentLevel = level,
             Cost = 0,
         };
@@ -60,8 +60,8 @@ public static class LevelSelector
             'x' => CellType.Empty,
             '#' => CellType.Rock,
             '.' => CellType.Storage,
-            '@' => CellType.Farmer,
-            '$' => CellType.Seed,
+            '@' => CellType.Player,
+            '$' => CellType.Box,
             _ => CellType.Empty,
         };
     }

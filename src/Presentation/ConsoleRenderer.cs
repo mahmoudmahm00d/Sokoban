@@ -1,10 +1,10 @@
 using System.Text;
-using SokoFarm.Core.Handlers;
-using SokoFarm.Core.Interfaces;
-using SokoFarm.Core.Models;
+using Sokoban.Core.Handlers;
+using Sokoban.Core.Interfaces;
+using Sokoban.Core.Models;
 using Spectre.Console;
 
-namespace SokoFarm.Presentation;
+namespace Sokoban.Presentation;
 
 public class ConsoleRenderer : IRenderer
 {
@@ -14,11 +14,11 @@ public class ConsoleRenderer : IRenderer
         {
             CellType.Empty => " ",
             CellType.Rock => "#",
-            CellType.Seed => "$",
-            CellType.SeedOnStorage => "*",
+            CellType.Box => "$",
+            CellType.BoxOnStorage => "*",
             CellType.Storage => ".",
-            CellType.Farmer => "@",
-            CellType.FarmerOnStorage => "+",
+            CellType.Player => "@",
+            CellType.PlayerOnStorage => "+",
             _ => " ",
         };
     }
@@ -50,19 +50,19 @@ public class ConsoleRenderer : IRenderer
             case CellType.Rock:
                 AnsiConsole.Write(new Markup("[silver]#[/]"));
                 break;
-            case CellType.Seed:
+            case CellType.Box:
                 AnsiConsole.Write(new Markup("[grey23 on green4]$[/]"));
                 break;
-            case CellType.SeedOnStorage:
+            case CellType.BoxOnStorage:
                 AnsiConsole.Write(new Markup("[grey23 on green]*[/]"));
                 break;
             case CellType.Storage:
                 AnsiConsole.Write(new Markup("[grey23 on darkgreen].[/]"));
                 break;
-            case CellType.Farmer:
+            case CellType.Player:
                 AnsiConsole.Write(new Markup("[dodgerblue2 on silver]@[/]"));
                 break;
-            case CellType.FarmerOnStorage:
+            case CellType.PlayerOnStorage:
                 AnsiConsole.Write(new Markup("[dodgerblue2 on silver]+[/]"));
                 break;
             default:
@@ -81,7 +81,7 @@ public class ConsoleRenderer : IRenderer
 
     private static void PrintLevelInfo(State state)
     {
-        AnsiConsole.MarkupLine("[bold]Welcome to SokoFarm[/]");
+        AnsiConsole.MarkupLine("[bold]Welcome to Sokoban[/]");
         AnsiConsole.MarkupLine($"[bold]Level: {state.CurrentLevel}[/]");
         if (state.IsCurrentLevelSolved)
         {

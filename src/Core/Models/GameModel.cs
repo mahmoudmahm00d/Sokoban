@@ -3,13 +3,16 @@ using SokoFarm.Core.Algorithms;
 using SokoFarm.Core.Handlers;
 using SokoFarm.Core.Interfaces;
 using SokoFarm.Core.Logic;
-using Spectre.Console;
+using SokoFarm.Presentation;
+using static SokoFarm.Presentation.Delay;
 
 namespace SokoFarm.Core.Models;
 
 public class GameModel
 {
+    private bool _isRenderLastPath = false;
     private State _currentState;
+    private readonly Delay _delay;
 
     private readonly IController _controller;
     private SokobanSearchAlgorithm _algorithm;
@@ -27,6 +30,9 @@ public class GameModel
 
         _token = new CancellationTokenSource();
         _controller = new ConsoleController();
+        _delay = new Delay(1000);
+        _delay.OnDurationChanged += (object sender, DurationChangedEventArgs args) =>
+            _controller.Renderer.DisplayMessage($"Current delay: {args.Duration}");
     }
 
     public static bool IsGameOver()
@@ -54,6 +60,26 @@ public class GameModel
         }
 
         if (_algorithm is not null)
+        {
+            return;
+        }
+
+        if (action == Enums.PlayerActions.IncreaseSpeed)
+        {
+            _delay.Duration += 50;
+        }
+
+        if (action == Enums.PlayerActions.DecreaseSpeed)
+        {
+            _delay.Duration -= 50;
+        }
+
+        if (action == Enums.PlayerActions.Quit)
+        {
+            Actions.Actions.QuitGame();
+        }
+
+        if (_isRenderLastPath)
         {
             return;
         }
@@ -98,9 +124,10 @@ public class GameModel
                     Render();
                 }
                 catch (FileNotFoundException) { }
+
                 return;
             }
-            else if (action.Value == Enums.PlayerActions.NextLevel)
+            else if (action == Enums.PlayerActions.NextLevel)
             {
                 try
                 {
@@ -113,9 +140,10 @@ public class GameModel
                     Render();
                 }
                 catch (FileNotFoundException) { }
+
                 return;
             }
-            else if (action.Value == Enums.PlayerActions.ResetLevel)
+            else if (action == Enums.PlayerActions.ResetLevel)
             {
                 try
                 {
@@ -128,40 +156,42 @@ public class GameModel
                     Render();
                 }
                 catch (FileNotFoundException) { }
+
                 return;
             }
-            else if (action.Value == Enums.PlayerActions.PlayDFS)
+            else if (action == Enums.PlayerActions.PlayDFS)
             {
                 _algorithm = new DFS();
                 AlgorithmExecutionStatistics();
             }
-            else if (action.Value == Enums.PlayerActions.PlayBFS)
+            else if (action == Enums.PlayerActions.PlayBFS)
             {
                 _algorithm = new BFS();
                 AlgorithmExecutionStatistics();
             }
-            else if (action.Value == Enums.PlayerActions.PlayUniformCostSearch)
+            else if (action == Enums.PlayerActions.PlayUniformCostSearch)
             {
                 _algorithm = new UCS();
                 AlgorithmExecutionStatistics();
             }
-            else if (action.Value == Enums.PlayerActions.PlayAStar)
+            else if (action == Enums.PlayerActions.PlayAStar)
             {
                 _algorithm = new AStar();
                 AlgorithmExecutionStatistics();
             }
-            else if (action.Value == Enums.PlayerActions.HillClimbing)
+            else if (action == Enums.PlayerActions.HillClimbing)
             {
                 _algorithm = new HillClimbing();
                 AlgorithmExecutionStatistics();
             }
-            else if (action.Value == Enums.PlayerActions.DisplayPath)
+            else if (action == Enums.PlayerActions.DisplayPath)
             {
-                _controller.Renderer.DisplayAllPath(_currentState);
-            }
-            else if (action.Value == Enums.PlayerActions.Quit)
-            {
-                Actions.Actions.QuitGame();
+                Task.Run(() =>
+                {
+                    _isRenderLastPath = true;
+                    _controller.Renderer.DisplayAllPath(_currentState, _delay, _token);
+                    _isRenderLastPath = false;
+                });
             }
 
             return;
@@ -188,8 +218,8 @@ public class GameModel
                 _controller.Renderer,
                 _token
             );
-            _currentState = result?.Item1 ?? _currentState;
             stopwatch.Stop();
+            _currentState = result?.Item1 ?? _currentState;
             _controller.Renderer.DisplayAlgorithmExecutionStatistics(
                 result.Item1,
                 result.Item2,

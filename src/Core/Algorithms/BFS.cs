@@ -53,7 +53,7 @@ public class BFS : SokobanSearchAlgorithm
                 {
                     renderer?.ClearPreviousState();
                     renderer?.Display(nextState);
-                    return new Tuple<State, HashSet<State>>(currentState, visited);
+                    return new Tuple<State, HashSet<State>>(nextState, visited);
                 }
 
                 queue.Enqueue(nextState);

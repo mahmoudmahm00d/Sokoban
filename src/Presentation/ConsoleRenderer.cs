@@ -74,7 +74,13 @@ public class ConsoleRenderer : IRenderer
     public void Display(State state)
     {
         ArgumentNullException.ThrowIfNull(state);
+        PrintLevelInfo(state);
+        PrintGrid(state);
+        PrintControls();
+    }
 
+    private static void PrintLevelInfo(State state)
+    {
         AnsiConsole.MarkupLine("[bold]Welcome to SokoFarm[/]");
         AnsiConsole.MarkupLine($"[bold]Level: {state.CurrentLevel}[/]");
         if (state.IsCurrentLevelSolved)
@@ -86,7 +92,27 @@ public class ConsoleRenderer : IRenderer
         {
             AnsiConsole.MarkupLine($"[bold white on darkred]Level Is Unsolvable[/]");
         }
+    }
 
+    private static void PrintControls()
+    {
+        AnsiConsole.MarkupLine(
+            "Move with arrow keys [bold blue](Up, Right, Down, Left)[/], UnDo: [bold blue]U[/]"
+        );
+        AnsiConsole.MarkupLine("Next Level: [bold blue]N[/], Previous Level: [bold blue]B[/]");
+        AnsiConsole.MarkupLine(
+            "DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/], Hill Climbing: [bold blue]5[/]"
+        );
+        AnsiConsole.MarkupLine(
+            "Print path [bold blue]P[/]([bold blue]K[/] [gray]-50ms playback delay[/],[bold blue]L[/] [gray]+50ms playback delay[/])"
+        );
+        AnsiConsole.MarkupLine(
+            "Reset with [bold blue]R[/], Cancel: [bold blue]C[/], Quit: [bold blue]Q[/]"
+        );
+    }
+
+    private static void PrintGrid(State state)
+    {
         for (var i = 0; i < state.Grid.Cells.GetLength(0); i++)
         {
             for (var j = 0; j < state.Grid.Cells.GetLength(1); j++)
@@ -96,15 +122,6 @@ public class ConsoleRenderer : IRenderer
 
             Console.WriteLine();
         }
-
-        AnsiConsole.MarkupLine("Move with arrow keys [bold blue](Up, Right, Down, Left)[/]");
-        AnsiConsole.MarkupLine("Next Level: [bold blue]n[/], Previous Level: [bold blue]b[/]");
-        AnsiConsole.MarkupLine(
-            "DFS: [bold blue]1[/], BFS: [bold blue]2[/], UCS: [bold blue]3[/], A*: [bold blue]4[/], Hill Climbing: [bold blue]5[/]"
-        );
-        AnsiConsole.MarkupLine(
-            "Print path [bold blue]p[/], Reset with [bold blue]r[/], Cancel: [bold blue]c[/], Quit: [bold blue]q[/]"
-        );
     }
 
     public void ClearPreviousState()
@@ -112,7 +129,11 @@ public class ConsoleRenderer : IRenderer
         Console.Clear();
     }
 
-    public void DisplayAllPath(State state)
+    public void DisplayAllPath(
+        State state,
+        Delay delay,
+        CancellationTokenSource cancellationToken = null
+    )
     {
         if (state is null)
         {
@@ -120,14 +141,53 @@ public class ConsoleRenderer : IRenderer
         }
 
         var currentState = state;
-        var movesCount = 0;
+        Stack<State> moves = [];
+        moves.Push(currentState);
+        while (currentState is not null)
+        {
+            moves.Push(currentState);
+            currentState = currentState.PreviousState;
+        }
+
+        currentState = moves.Pop();
+        var movesCount = -1; // Do not consider initial state
         do
         {
-            Display(currentState);
-            currentState = currentState.PreviousState;
+            if (cancellationToken?.IsCancellationRequested ?? false)
+            {
+                return;
+            }
+
+            Console.Clear();
+            if (moves.Count == 0)
+            {
+                PrintLevelInfo(currentState);
+            }
+            DisplayMessage($"Current delay: {delay.Duration}");
+            PrintGrid(currentState);
+            if (moves.Count == 0)
+            {
+                PrintControls();
+            }
+
+            if (0 < delay.Duration)
+            {
+                Thread.Sleep(delay.Duration);
+            }
+
+            if (0 < moves.Count)
+            {
+                currentState = moves.Pop();
+                movesCount++;
+            }
+            else
+            {
+                currentState = null;
+            }
+
             AnsiConsole.MarkupLine($"[blue]{new string('=', 50)}[/]");
-            movesCount++;
-        } while (currentState != null);
+        } while (currentState is not null);
+        movesCount = 0 < movesCount ? movesCount : 0;
         AnsiConsole.MarkupLine($"Moves Count: [blue]{movesCount}[/]");
     }
 
@@ -151,5 +211,37 @@ public class ConsoleRenderer : IRenderer
         }
 
         DisplayMessage("Could not solve this board");
+    }
+}
+
+public class Delay
+{
+    public Delay()
+    {
+        Duration = 0;
+    }
+
+    public Delay(int duration)
+    {
+        Duration = duration;
+    }
+
+    private int duration;
+
+    public int Duration
+    {
+        get => duration;
+        set
+        {
+            duration = value;
+            OnDurationChanged?.Invoke(this, new DurationChangedEventArgs(duration));
+        }
+    }
+
+    public event EventHandler<DurationChangedEventArgs> OnDurationChanged;
+
+    public class DurationChangedEventArgs(int duration)
+    {
+        public int Duration { get; } = duration;
     }
 }

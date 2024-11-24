@@ -85,17 +85,80 @@ public class GameModel
         }
 
         var direction = action?.ToDirection();
-        if (direction is null)
+        if (direction is not null)
         {
-            if (action == Enums.PlayerActions.UnDo && _currentState.PreviousState is not null)
+            var canMove = Actions.Actions.CanMove(_currentState, direction.Value);
+            if (!canMove)
+                return;
+            _currentState.IsHumanPlayer = true;
+            _currentState = Actions.Actions.Move(_currentState, direction.Value);
+            _controller.Renderer.ClearPreviousState();
+            Render();
+            return;
+        }
+
+        if (action == Enums.PlayerActions.UnDo && _currentState.PreviousState is not null)
+        {
+            _currentState = _currentState.PreviousState;
+            _controller.Renderer.ClearPreviousState();
+            Render();
+            return;
+        }
+
+        if (action == Enums.PlayerActions.ResetLevel)
+        {
+            _currentState = LevelSelector.SelectLevel(
+                _currentState.Grid,
+                _currentState.CurrentLevel
+            );
+
+            _controller.Renderer.ClearPreviousState();
+            Render();
+            return;
+        }
+
+        if (action.Value == Enums.PlayerActions.PreviousLevel)
+        {
+            if (_currentState.CurrentLevel - 1 <= 0)
             {
-                _currentState = _currentState.PreviousState;
-                _controller.Renderer.ClearPreviousState();
-                Render();
                 return;
             }
 
-            if (action == Enums.PlayerActions.ResetLevel)
+            try
+            {
+                _currentState = LevelSelector.SelectLevel(
+                    _currentState.Grid,
+                    _currentState.CurrentLevel - 1
+                );
+
+                _controller.Renderer.ClearPreviousState();
+                Render();
+            }
+            catch (FileNotFoundException) { }
+
+            return;
+        }
+
+        if (action == Enums.PlayerActions.NextLevel)
+        {
+            try
+            {
+                _currentState = LevelSelector.SelectLevel(
+                    _currentState.Grid,
+                    _currentState.CurrentLevel + 1
+                );
+
+                _controller.Renderer.ClearPreviousState();
+                Render();
+            }
+            catch (FileNotFoundException) { }
+
+            return;
+        }
+
+        if (action == Enums.PlayerActions.ResetLevel)
+        {
+            try
             {
                 _currentState = LevelSelector.SelectLevel(
                     _currentState.Grid,
@@ -104,106 +167,53 @@ public class GameModel
 
                 _controller.Renderer.ClearPreviousState();
                 Render();
-                return;
             }
-            else if (action.Value == Enums.PlayerActions.PreviousLevel)
-            {
-                if (_currentState.CurrentLevel - 1 <= 0)
-                {
-                    return;
-                }
-
-                try
-                {
-                    _currentState = LevelSelector.SelectLevel(
-                        _currentState.Grid,
-                        _currentState.CurrentLevel - 1
-                    );
-
-                    _controller.Renderer.ClearPreviousState();
-                    Render();
-                }
-                catch (FileNotFoundException) { }
-
-                return;
-            }
-            else if (action == Enums.PlayerActions.NextLevel)
-            {
-                try
-                {
-                    _currentState = LevelSelector.SelectLevel(
-                        _currentState.Grid,
-                        _currentState.CurrentLevel + 1
-                    );
-
-                    _controller.Renderer.ClearPreviousState();
-                    Render();
-                }
-                catch (FileNotFoundException) { }
-
-                return;
-            }
-            else if (action == Enums.PlayerActions.ResetLevel)
-            {
-                try
-                {
-                    _currentState = LevelSelector.SelectLevel(
-                        _currentState.Grid,
-                        _currentState.CurrentLevel
-                    );
-
-                    _controller.Renderer.ClearPreviousState();
-                    Render();
-                }
-                catch (FileNotFoundException) { }
-
-                return;
-            }
-            else if (action == Enums.PlayerActions.PlayDFS)
-            {
-                _algorithm = new DFS();
-                AlgorithmExecutionStatistics();
-            }
-            else if (action == Enums.PlayerActions.PlayBFS)
-            {
-                _algorithm = new BFS();
-                AlgorithmExecutionStatistics();
-            }
-            else if (action == Enums.PlayerActions.PlayUniformCostSearch)
-            {
-                _algorithm = new UCS();
-                AlgorithmExecutionStatistics();
-            }
-            else if (action == Enums.PlayerActions.PlayAStar)
-            {
-                _algorithm = new AStar();
-                AlgorithmExecutionStatistics();
-            }
-            else if (action == Enums.PlayerActions.HillClimbing)
-            {
-                _algorithm = new HillClimbing();
-                AlgorithmExecutionStatistics();
-            }
-            else if (action == Enums.PlayerActions.DisplayPath)
-            {
-                Task.Run(() =>
-                {
-                    _isRenderLastPath = true;
-                    _controller.Renderer.DisplayAllPath(_currentState, _delay, _token);
-                    _isRenderLastPath = false;
-                });
-            }
+            catch (FileNotFoundException) { }
 
             return;
         }
 
-        var canMove = Actions.Actions.CanMove(_currentState, direction.Value);
-        if (!canMove)
-            return;
-        _currentState.IsHumanPlayer = true;
-        _currentState = Actions.Actions.Move(_currentState, direction.Value);
-        _controller.Renderer.ClearPreviousState();
-        Render();
+        if (action == Enums.PlayerActions.PlayDFS)
+        {
+            _algorithm = new DFS();
+            AlgorithmExecutionStatistics();
+        }
+
+        if (action == Enums.PlayerActions.PlayBFS)
+        {
+            _algorithm = new BFS();
+            AlgorithmExecutionStatistics();
+        }
+
+        if (action == Enums.PlayerActions.PlayUniformCostSearch)
+        {
+            _algorithm = new UCS();
+            AlgorithmExecutionStatistics();
+        }
+
+        if (action == Enums.PlayerActions.PlayAStar)
+        {
+            _algorithm = new AStar();
+            AlgorithmExecutionStatistics();
+        }
+
+        if (action == Enums.PlayerActions.HillClimbing)
+        {
+            _algorithm = new HillClimbing();
+            AlgorithmExecutionStatistics();
+        }
+
+        if (action == Enums.PlayerActions.DisplayPath)
+        {
+            Task.Run(() =>
+            {
+                _isRenderLastPath = true;
+                _controller.Renderer.DisplayAllPath(_currentState, _delay, _token);
+                _isRenderLastPath = false;
+            });
+        }
+
+        return;
     }
 
     private void AlgorithmExecutionStatistics()

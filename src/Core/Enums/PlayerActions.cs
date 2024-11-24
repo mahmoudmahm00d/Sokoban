@@ -13,6 +13,8 @@ namespace SokoFarm.Core.Enums
         ResetLevel,
         DisplayPath,
         UnDo,
+        IncreaseSpeed,
+        DecreaseSpeed,
         PlayDFS,
         PlayBFS,
         PlayUniformCostSearch,

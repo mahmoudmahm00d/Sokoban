@@ -21,6 +21,8 @@ public class ConsolePlayerInput : IPlayerInput
             ConsoleKey.N => PlayerActions.NextLevel,
             ConsoleKey.P => PlayerActions.DisplayPath,
             ConsoleKey.U => PlayerActions.UnDo,
+            ConsoleKey.K => PlayerActions.DecreaseSpeed,
+            ConsoleKey.L => PlayerActions.IncreaseSpeed,
             ConsoleKey.D1 => PlayerActions.PlayDFS,
             ConsoleKey.D2 => PlayerActions.PlayBFS,
             ConsoleKey.D3 => PlayerActions.PlayUniformCostSearch,

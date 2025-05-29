@@ -7,6 +7,11 @@ public class ConsolePlayerInput : IPlayerInput
 {
     public PlayerActions? ReadPlayerInput()
     {
+        if (Console.IsInputRedirected)
+        {
+            throw new InvalidOperationException("Input is redirected, cannot read player input");
+        }
+
         var key = Console.ReadKey(intercept: true);
         return key.Key switch
         {

@@ -4,13 +4,12 @@ using Sokoban.Core.Handlers;
 using Sokoban.Core.Interfaces;
 using Sokoban.Core.Logic;
 using Sokoban.Presentation;
-using static Sokoban.Presentation.Delay;
 
 namespace Sokoban.Core.Models;
 
 public class GameModel
 {
-    private bool _isRenderLastPath = false;
+    private bool _isRenderLastPath;
     private State _currentState;
     private readonly Delay _delay;
 
@@ -31,7 +30,7 @@ public class GameModel
         _token = new CancellationTokenSource();
         _controller = new ConsoleController();
         _delay = new Delay(1000);
-        _delay.OnDurationChanged += (object sender, DurationChangedEventArgs args) =>
+        _delay.OnDurationChanged += (_, args) =>
             _controller.Renderer.DisplayMessage($"Current delay: {args.Duration}");
     }
 
@@ -212,8 +211,6 @@ public class GameModel
                 _isRenderLastPath = false;
             });
         }
-
-        return;
     }
 
     private void AlgorithmExecutionStatistics()
